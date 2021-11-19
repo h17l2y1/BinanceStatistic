@@ -8,9 +8,9 @@ namespace BinanceStatistic.Core.Models
         public bool PositionShared { get; set; }
         public bool DeliveryPositionShared { get; set; }
         public int FollowerCount { get; set; }
-        public decimal PnlValue { get; set; }
-        public decimal RoiValue { get; set; }
-        public int Rank { get; set; }
+        public decimal? PnlValue { get; set; }
+        public decimal? RoiValue { get; set; }
+        public int? Rank { get; set; }
         public string Change { get; set; }
     }
 }
