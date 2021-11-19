@@ -1,5 +1,3 @@
-using BinanceStatistic.Core.Enums;
-
 namespace BinanceStatistic.Core.Views.Request
 {
     public class SearchFeaturedTraderRequest

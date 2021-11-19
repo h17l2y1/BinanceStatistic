@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BinanceStatistic.Core.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace BinanceStatistic.Api.Middleware
@@ -21,10 +22,10 @@ namespace BinanceStatistic.Api.Middleware
             {
                 await _next(context);
             }
-            // catch (HttpRequestException ex)
-            // {
-                // await HandleExceptionAsync(context, ex);
-            // }
+            catch (BinanceException ex)
+            {
+                await HandleExceptionAsync(context, ex);
+            }
             catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex);
