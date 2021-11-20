@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace BinanceStatistic.Core
 {
-    public class BinanceConcurrentRequestsHttpClient, IBinanceConcurrentRequestsHttpClient
+    public class BinanceConcurrentRequestsHttpClient : BinanceHttpClient, IBinanceConcurrentRequestsHttpClient
     {
         private SemaphoreSlim semaphore;
         private long _circuitStatus;

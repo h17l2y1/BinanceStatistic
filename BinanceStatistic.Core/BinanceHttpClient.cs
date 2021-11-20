@@ -15,7 +15,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BinanceStatistic.Core
 {
-    public class BinanceHttpClient : BinanceConcurrentRequestsHttpClient, IBinanceHttpClient, IDisposable
+    public class BinanceHttpClient : IBinanceHttpClient, IDisposable
     {
         protected const string BaseAddress = "https://www.binance.com";
         protected readonly JsonSerializerOptions Options;
