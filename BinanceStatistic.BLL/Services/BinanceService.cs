@@ -24,22 +24,19 @@ namespace BinanceStatistic.BLL.Services
             var request = new SearchFeaturedTraderRequest
             {
                 PeriodType = nameof(PeriodType.DAILY),
-                SortType = nameof(SortType.PNL),
-                TradeType = nameof(TradeType.PERPETUAL),
-                Limit = 200,
-                IsShared = true
+                SortType = nameof(SortType.PNL)
             };
             IEnumerable<Trader> traders = await _client.GetTraders(request);
 
             // IEnumerable<string> traderIds = traders.Select(s => s.EncryptedUid);
             
-            IEnumerable<OtherPositionRequest> requests = traders.Select(s => new OtherPositionRequest
-            {
-                EncryptedUid = s.EncryptedUid,
-                TradeType = TradeType.PERPETUAL
-            } );
-
-            var position = await _client.GetUsersInParallelInWithBatches(requests);
+            // IEnumerable<OtherPositionRequest> requests = traders.Select(s => new OtherPositionRequest
+            // {
+            //     EncryptedUid = s.EncryptedUid,
+            //     TradeType = TradeType.PERPETUAL
+            // } );
+            //
+            // var position = await _client.GetUsersInParallelInWithBatches(requests);
             
             return null;
         }

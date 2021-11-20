@@ -10,6 +10,7 @@ namespace BinanceStatistic.BLL.Config
     {
         public static void Add(IServiceCollection services)
         {
+            services.AddScoped<IBinanceHttpClient, BinanceHttpClient>();
             services.AddScoped<IBinanceClient, BinanceClient>();
             services.AddScoped<IBinanceService, BinanceService>();
         }
