@@ -1,3 +1,4 @@
+using BinanceStatistic.Api.Middleware;
 using BinanceStatistic.BLL.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +43,7 @@ namespace BinanceStatistic.Api
             app.UseRouting();
 
             // app.UseAuthorization();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
