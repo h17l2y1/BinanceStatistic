@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace BinanceStatistic.Core.Interfaces
 {
-    public interface IBinanceConcurrentRequestsHttpClient
+    public interface IBaseBinanceConcurrentRequestsHttpClient : IBaseBinanceHttpClient
     {
         // Task<string> SendPostRequestsTest<T>(string url, T request);
         Task<string> SendPostRequestsTest<T>(T request);

@@ -13,18 +13,18 @@ namespace BinanceStatistic.Core
         private const string LeaderboardEndpoint = "/bapi/futures/v1/public/future/leaderboard/searchLeaderboard";
         private const string OtherPositionEndpoint = "/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
         
-        private readonly IBinanceHttpClient _binanceHttpClient;
+        private readonly IBaseBinanceHttpClient _baseBinanceHttpClient;
         private readonly JsonSerializerOptions _options;
 
-        public BinanceClient(IBinanceHttpClient binanceHttpClient)
+        public BinanceClient(IBaseBinanceHttpClient baseBinanceHttpClient)
         {
-            _binanceHttpClient = binanceHttpClient;
+            _baseBinanceHttpClient = baseBinanceHttpClient;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
         public async Task<IEnumerable<Trader>> GetTraders(SearchFeaturedTraderRequest request)
         {
-            string response = await _binanceHttpClient.SendPostRequest(LeaderboardEndpoint, request);
+            string response = await _baseBinanceHttpClient.SendPostRequest(LeaderboardEndpoint, request);
 
             SearchFeaturedTraderResponse responseModel = JsonSerializer.Deserialize<SearchFeaturedTraderResponse>(response, _options);
             IEnumerable<Trader> traders = responseModel?.Data;
@@ -33,7 +33,7 @@ namespace BinanceStatistic.Core
         
         public async Task<IEnumerable<Position>> GetPositions(OtherPositionRequest request)
         {
-            string response = await _binanceHttpClient.SendPostRequest(OtherPositionEndpoint, request);
+            string response = await _baseBinanceHttpClient.SendPostRequest(OtherPositionEndpoint, request);
 
             OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(response, _options);
             IEnumerable<Position> positions = responseModel?.Data.OtherPositionRetList;
@@ -42,7 +42,7 @@ namespace BinanceStatistic.Core
         
         public async Task<IEnumerable<Position>> SendPostRequestsTest(OtherPositionRequest request)
         {
-            string response = await _binanceHttpClient.SendPostRequestsTest(OtherPositionEndpoint, request);
+            string response = await _baseBinanceHttpClient.SendPostRequestsTest(OtherPositionEndpoint, request);
 
             OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(response, _options);
             
