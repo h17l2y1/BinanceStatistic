@@ -34,14 +34,14 @@ namespace BinanceStatistic.Core
             return response;
         }
 
-        private string CheckResponseForError(HttpResponseMessage httpResponseMessage)
+        public string CheckResponseForError(HttpResponseMessage httpResponseMessage)
         {
             string responseJson = httpResponseMessage.Content.ReadAsStringAsync().Result;
 
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK)
             {
                 BaseResponse binanceExceptionData = JsonSerializer.Deserialize<BaseResponse>(responseJson, Options);
-                throw new BinanceException(httpResponseMessage.StatusCode, httpResponseMessage.ReasonPhrase, binanceExceptionData);
+                // throw new BinanceException(httpResponseMessage.StatusCode, binanceExceptionData.Message, binanceExceptionData);
             }
 
             return responseJson;

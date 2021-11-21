@@ -1,18 +1,18 @@
+
 using TradeTypeEnum = BinanceStatistic.Core.Enums.TradeType;
 
 namespace BinanceStatistic.Core.Views.Request
 {
-    public class GetLeaderboardRank
+    public class BaseSearchTraderRequest
     {
-        public GetLeaderboardRank()
+        public BaseSearchTraderRequest()
         {
             IsShared = true;
             TradeType = nameof(TradeTypeEnum.PERPETUAL);
         }
         
-        private bool IsShared { get; set; }
         public string PeriodType { get; set; }
-        public string StatisticType { get; set; }
-        private string TradeType { get; set; }
+        public string TradeType { get; set; }
+        public bool IsShared { get; set; }
     }
 }

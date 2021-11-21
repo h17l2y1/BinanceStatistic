@@ -9,8 +9,7 @@ namespace BinanceStatistic.Core.Views.Request
             EncryptedUid = encryptedUid;
             TradeType = nameof(TradeTypeEnum.PERPETUAL);
         }
-        
-        
+
         public string EncryptedUid { get; set; }
         public string TradeType { get; set; }
     }

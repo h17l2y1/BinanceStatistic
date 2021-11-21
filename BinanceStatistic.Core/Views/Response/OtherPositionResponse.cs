@@ -13,6 +13,6 @@ namespace BinanceStatistic.Core.Views.Response
     {
         public IEnumerable<Position> OtherPositionRetList { get; set; }
         public IEnumerable<int> UpdateTime { get; set; }
-        public long UpdateTimeStamp { get; set; }
+        // public long UpdateTimeStamp { get; set; }
     }
 }
