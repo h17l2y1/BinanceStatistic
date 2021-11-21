@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BinanceStatistic.BLL.Helpers.Interfaces;
@@ -9,7 +10,6 @@ using BinanceStatistic.Core.Interfaces;
 using BinanceStatistic.Core.Models;
 using BinanceStatistic.Core.Views.Request;
 using BinanceStatistic.Core.Views.Response;
-using Newtonsoft.Json;
 
 namespace BinanceStatistic.BLL.Services
 {
@@ -27,16 +27,23 @@ namespace BinanceStatistic.BLL.Services
         public async Task<SearchFeaturedTraderResponse> Test()
         {
             // List<TopTrader> topTraders = await GetTopByRank();
+            // Console.WriteLine($"topTraders - {topTraders.Count}");
+
             // List<Trader> traders1 = await GetLeaderboardFeaturedTrader();
+            // Console.WriteLine($"traders1 - {traders1.Count}");
+
             // List<Trader> traders2 = await GetSearchLeaderboard();
+            // Console.WriteLine($"traders2 - {traders2.Count}");
 
-            // var positions = new List<OtherPositionRequest>();
+            var totalTraders = new List<OtherPositionRequest>();
 
-            // tradersIds.AddRange(topTraders.Select(s => new OtherPositionRequest(s.EncryptedUid)));
-            // tradersIds.AddRange(traders1.Select(s => new OtherPositionRequest(s.EncryptedUid)));
-            // tradersIds.AddRange(traders2.Select(s => new OtherPositionRequest(s.EncryptedUid)));
+            // totalTraders.AddRange(topTraders.Select(s => new OtherPositionRequest(s.EncryptedUid)));
+            // totalTraders.AddRange(traders1.Select(s => new OtherPositionRequest(s.EncryptedUid)));
+            // totalTraders.AddRange(traders2.Select(s => new OtherPositionRequest(s.EncryptedUid)));
 
-            // var xxx = await GetPositions(positions);
+            // Console.WriteLine($"positions - {totalTraders.Count}");
+
+            // List<Position> positions = await GetPositions(totalTraders);
 
             List<Position> positions = _positionHelper.GetMocPositions();
             CreateStatistic(positions);
@@ -71,7 +78,7 @@ namespace BinanceStatistic.BLL.Services
 
             return listTraders;
         }
-        
+
         private async Task<List<Trader>> GetLeaderboardFeaturedTrader()
         {
             // TODO: redo request generator
@@ -104,7 +111,7 @@ namespace BinanceStatistic.BLL.Services
 
             return listTraders;
         }
-        
+
         private async Task<List<Trader>> GetSearchLeaderboard()
         {
             // TODO: redo request generator
@@ -137,25 +144,29 @@ namespace BinanceStatistic.BLL.Services
 
             return listTraders;
         }
-        
+
         private async Task<List<Position>> GetPositions(List<OtherPositionRequest> requests)
         {
-
             var listPositions = new List<Position>();
             for (int i = 0; i < requests.Count; i++)
             {
                 IEnumerable<Position> position = await _client.GetPositions(requests[i]);
                 listPositions.AddRange(position);
+                if (i % 10 != 0)
+                {
+                    Console.WriteLine($"positions - {listPositions.Count}");
+                    Console.WriteLine($"Traders left - {i}/{requests.Count}");
+                }
             }
-            
-            string requestJson = JsonConvert.SerializeObject(listPositions);
 
             return listPositions;
         }
 
         private void CreateStatistic(List<Position> positions)
         {
-            var groupedPositions = positions.GroupBy(g => g.Symbol);
+            var groupedPositions = positions.Where(w=>w.FormattedUpdateTime.Day == DateTime.Today.Day)
+                                                             .GroupBy(g => g.Symbol)
+                                                             .ToList();
 
             var xxx = groupedPositions.Select(s => new PositionData
             {
@@ -163,10 +174,8 @@ namespace BinanceStatistic.BLL.Services
                 Count = s.Count(),
                 Short = s.Count(c => c.Amount < 0),
                 Long = s.Count(c => c.Amount > 0)
-            });
-
-
+            }).Where(w=>w.Count > 0);
+            
         }
-
     }
 }

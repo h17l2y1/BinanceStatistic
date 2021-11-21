@@ -16,12 +16,12 @@ namespace BinanceStatistic.Core
         private const long CLOSED = 0;
         private const long TRIPPED = 1;
         public string UNAVAILABLE = "Unavailable";
-        public int maxConcurrentRequests = 4;
+        public int maxConcurrentRequests = 1000;
         private const string ENDPOINT = "/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
 
         public BinanceHttpClient()
         {
-            SetMaxConcurrency(ENDPOINT, maxConcurrentRequests);
+            // SetMaxConcurrency(ENDPOINT, maxConcurrentRequests);
             semaphore = new SemaphoreSlim(maxConcurrentRequests);
             _circuitStatus = CLOSED;
         }
