@@ -1,5 +1,3 @@
-using System;
-
 namespace BinanceStatistic.BLL.Models
 {
     public class PositionData
@@ -8,6 +6,6 @@ namespace BinanceStatistic.BLL.Models
         public int Count { get; set; }
         public int Short { get; set; }
         public int Long { get; set; }
-        public DateTime FormattedUpdateTime { get; set; }
+        public decimal Amount { get; set; }
     }
 }

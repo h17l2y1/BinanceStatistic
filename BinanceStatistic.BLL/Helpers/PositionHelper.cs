@@ -12,10 +12,18 @@ namespace BinanceStatistic.BLL.Helpers
     {
         public List<Position> GetMocPositions()
         {
-            string jsonString = File.ReadAllText(@"/Users/new/Desktop/Json.txt", Encoding.UTF8);
+            string path;
             
-            List<Position> positions =
-                JsonSerializer.Deserialize<List<Position>>(jsonString);
+            OperatingSystem os = Environment.OSVersion;
+            if (os.Platform == PlatformID.Unix)
+            {
+                path = @"/Users/new/Desktop/Json.txt";
+            }
+            path = @"C:/Users/Anuitex-76/Desktop/Json.txt";
+            
+            string jsonString = File.ReadAllText(path, Encoding.UTF8);
+
+            List<Position> positions = JsonSerializer.Deserialize<List<Position>>(jsonString);
 
             foreach (var position in positions)
             {
@@ -30,7 +38,6 @@ namespace BinanceStatistic.BLL.Helpers
             }
             
             return positions;
-
         }
     }
 }

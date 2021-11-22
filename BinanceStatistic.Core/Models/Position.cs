@@ -5,7 +5,7 @@ namespace BinanceStatistic.Core.Models
 {
     public class Position
     {
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; }
         public decimal EntryPrice { get; set; }
         public decimal MarkPrice { get; set; }
         public decimal Pnl { get; set; }

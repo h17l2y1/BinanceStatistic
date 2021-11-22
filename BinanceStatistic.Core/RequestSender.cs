@@ -5,20 +5,19 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BinanceStatistic.Core.Interfaces;
-using BinanceStatistic.Core.Models;
 using BinanceStatistic.Core.Views.Response;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BinanceStatistic.Core
 {
-    public class BaseBinanceHttpClient : IBaseBinanceHttpClient, IDisposable
+    public class RequestSender : IRequestSender, IDisposable
     {
         protected const string BaseAddress = "https://www.binance.com";
         protected readonly JsonSerializerOptions Options;
         protected readonly HttpClient HttpClient;
         
-        public BaseBinanceHttpClient()
+        public RequestSender()
         {
             HttpClient = new HttpClient();
             HttpClient.BaseAddress = new Uri(BaseAddress);
@@ -60,6 +59,5 @@ namespace BinanceStatistic.Core
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
     }
 }

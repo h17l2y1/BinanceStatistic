@@ -9,14 +9,14 @@ using Newtonsoft.Json;
 
 namespace BinanceStatistic.Core
 {
-    public class BinanceHttpClient : BaseBinanceHttpClient, IBinanceHttpClient
+    public class BinanceHttpClient : RequestSender, IBinanceHttpClient
     {
         private SemaphoreSlim semaphore;
         private long _circuitStatus;
         private const long CLOSED = 0;
         private const long TRIPPED = 1;
         public string UNAVAILABLE = "Unavailable";
-        public int maxConcurrentRequests = 1000;
+        public int maxConcurrentRequests = 10;
         private const string ENDPOINT = "/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
 
         public BinanceHttpClient()
@@ -25,12 +25,12 @@ namespace BinanceStatistic.Core
             semaphore = new SemaphoreSlim(maxConcurrentRequests);
             _circuitStatus = CLOSED;
         }
-        
+
         private void SetMaxConcurrency(string url, int maxConcurrentRequests)
         {
             ServicePointManager.FindServicePoint(new Uri(url)).ConnectionLimit = maxConcurrentRequests;
         }
-        
+
         public void CloseCircuit()
         {
             if (Interlocked.CompareExchange(ref _circuitStatus, CLOSED, TRIPPED) == TRIPPED)
@@ -38,7 +38,7 @@ namespace BinanceStatistic.Core
                 Console.WriteLine("Closed circuit");
             }
         }
-        
+
         private void TripCircuit(string reason)
         {
             if (Interlocked.CompareExchange(ref _circuitStatus, TRIPPED, CLOSED) == CLOSED)
@@ -46,13 +46,13 @@ namespace BinanceStatistic.Core
                 Console.WriteLine($"Tripping circuit because: {reason}");
             }
         }
-        
+
         private bool IsTripped()
         {
             Console.WriteLine("TRIPPED");
             return Interlocked.Read(ref _circuitStatus) == TRIPPED;
         }
-        
+
         public async Task<string> SendMultiPostRequests<T>(string endPoint, T request)
         {
             try
@@ -66,10 +66,10 @@ namespace BinanceStatistic.Core
 
                 string requestJson = JsonConvert.SerializeObject(request);
                 var stringContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-                HttpResponseMessage httpResponseMessage = await HttpClient.PostAsync(endPoint, stringContent);                // var response = await HttpClient.GetAsync(GetRandomNumberUrl);
+                HttpResponseMessage httpResponseMessage = await HttpClient.PostAsync(endPoint, stringContent);
 
                 string response = CheckResponseForError(httpResponseMessage);
-                
+
                 return response;
             }
             catch (Exception ex) when (ex is OperationCanceledException || ex is TaskCanceledException)
@@ -83,5 +83,6 @@ namespace BinanceStatistic.Core
                 semaphore.Release();
             }
         }
+        
     }
 }

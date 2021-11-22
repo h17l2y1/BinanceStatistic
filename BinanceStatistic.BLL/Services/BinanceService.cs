@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,29 +27,68 @@ namespace BinanceStatistic.BLL.Services
 
         public async Task<SearchFeaturedTraderResponse> Test()
         {
-            // List<TopTrader> topTraders = await GetTopByRank();
-            // Console.WriteLine($"topTraders - {topTraders.Count}");
-
-            // List<Trader> traders1 = await GetLeaderboardFeaturedTrader();
-            // Console.WriteLine($"traders1 - {traders1.Count}");
-
-            // List<Trader> traders2 = await GetSearchLeaderboard();
-            // Console.WriteLine($"traders2 - {traders2.Count}");
-
             var totalTraders = new List<OtherPositionRequest>();
 
+            // List<TopTrader> topTraders = await GetTopByRank();
             // totalTraders.AddRange(topTraders.Select(s => new OtherPositionRequest(s.EncryptedUid)));
-            // totalTraders.AddRange(traders1.Select(s => new OtherPositionRequest(s.EncryptedUid)));
+            // Console.WriteLine($"topTraders - {topTraders.Count}");
+
+            List<Trader> traders1 = await GetLeaderboardFeaturedTrader();
+            totalTraders.AddRange(traders1.Select(s => new OtherPositionRequest(s.EncryptedUid)));
+            Console.WriteLine($"traders1 - {traders1.Count}");
+
+            // List<Trader> traders2 = await GetSearchLeaderboard();
             // totalTraders.AddRange(traders2.Select(s => new OtherPositionRequest(s.EncryptedUid)));
-
-            // Console.WriteLine($"positions - {totalTraders.Count}");
-
+            // Console.WriteLine($"traders2 - {traders2.Count}");
+            
             // List<Position> positions = await GetPositions(totalTraders);
-
-            List<Position> positions = _positionHelper.GetMocPositions();
-            CreateStatistic(positions);
+            
+            // List<Position> positions = _positionHelper.GetMocPositions();
+            
+            List<Position> positions = GetPositions2(totalTraders);
+            // CreateStatistic(positions);
 
             return null;
+        }
+
+        private List<Position> GetPositions2(List<OtherPositionRequest> inputItems)
+        {
+            var listPositions = new ConcurrentBag<IEnumerable<Position>>();
+            var listPositions2 = new List<Position>();
+
+            int i = 1;
+            int j = 0;
+            
+            ParallelQuery<OtherPositionRequest> processedItems = inputItems
+                .AsParallel()   //Allow parallel processing of items
+                //.AsOrdered()    //Force items in output enumeration to be in the same order as in input
+                //.WithMergeOptions(ParallelMergeOptions.NotBuffered) //Allows enumeration of processed items as soon as possible (before all items are processed) at the cost of slightly lower performace
+                .Select(request =>
+                {
+                    Console.WriteLine($"{i}");
+                    //Do some processing of item
+                    var newPositions = _client.GetPositions(request).Result;
+                    listPositions.Add(newPositions);
+
+                    j += newPositions.Count();
+                    
+                    if (i % 10 != 0)
+                    {
+                        Console.WriteLine($"Positions - {newPositions.Count()}");
+                        Console.WriteLine($"New positions - {j}");
+                        Console.WriteLine($"Traders left - {i}/{inputItems.Count}");
+                    }
+                    
+                    i++;
+                    return request;    //return either input item itself, or processed item (e.g. item.ToString())
+                });
+
+            foreach (var listPosition in listPositions)
+            {
+                listPositions2.AddRange(listPosition);
+            }
+            
+            return listPositions2;
         }
 
         private async Task<List<TopTrader>> GetTopByRank()
@@ -162,9 +202,12 @@ namespace BinanceStatistic.BLL.Services
             return listPositions;
         }
 
-        private void CreateStatistic(List<Position> positions)
+        private void CreateStatistic(IEnumerable<Position> positions)
         {
-            var groupedPositions = positions.Where(w=>w.FormattedUpdateTime.Day == DateTime.Today.Day)
+            // for debug
+            DateTime someDay = new DateTime(2021, 11, 21);
+
+            var groupedPositions = positions.Where(w=>w.FormattedUpdateTime.Day == someDay.Day)
                                                              .GroupBy(g => g.Symbol)
                                                              .ToList();
 
@@ -173,8 +216,10 @@ namespace BinanceStatistic.BLL.Services
                 PositionName = s.Key,
                 Count = s.Count(),
                 Short = s.Count(c => c.Amount < 0),
-                Long = s.Count(c => c.Amount > 0)
-            }).Where(w=>w.Count > 0);
+                Long = s.Count(c => c.Amount > 0),
+                Amount = s.Sum(f=>f.Amount)
+            }).Where(w=>w.Count > 0)
+                .ToList();
             
         }
     }

@@ -14,6 +14,5 @@ namespace BinanceStatistic.Core.Interfaces
         Task<IEnumerable<Position>> GetPositions(OtherPositionRequest request);
 
         Task<IEnumerable<TopTrader>> GetTopTraders(SearchFeaturedTopTraderRequest request);
-
     }
 }

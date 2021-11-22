@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BinanceStatistic.Core.Interfaces;
@@ -58,7 +59,5 @@ namespace BinanceStatistic.Core
             IEnumerable<Position> positions = responseModel?.Data.OtherPositionRetList;
             return positions;
         }
-
-
     }
 }
