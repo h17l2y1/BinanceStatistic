@@ -41,7 +41,10 @@ namespace BinanceStatistic.BLL.Services
             // totalTraders.AddRange(traders2.Select(s => new OtherPositionRequest(s.EncryptedUid)));
             // Console.WriteLine($"traders2 - {traders2.Count}");
             
+            Console.WriteLine($"positions - {totalTraders.Count}");
+
             // List<Position> positions = await GetPositions(totalTraders);
+            
             
             // List<Position> positions = _positionHelper.GetMocPositions();
             
@@ -53,42 +56,46 @@ namespace BinanceStatistic.BLL.Services
 
         private List<Position> GetPositions2(List<OtherPositionRequest> inputItems)
         {
-            var listPositions = new ConcurrentBag<IEnumerable<Position>>();
+            var listPositions = new ConcurrentBag<List<Position>>();
             var listPositions2 = new List<Position>();
 
             int i = 1;
             int j = 0;
             
-            ParallelQuery<OtherPositionRequest> processedItems = inputItems
+            var processedItems = inputItems
                 .AsParallel()   //Allow parallel processing of items
-                //.AsOrdered()    //Force items in output enumeration to be in the same order as in input
-                //.WithMergeOptions(ParallelMergeOptions.NotBuffered) //Allows enumeration of processed items as soon as possible (before all items are processed) at the cost of slightly lower performace
-                .Select(request =>
+                .AsOrdered()    //Force items in output enumeration to be in the same order as in input
+                .WithMergeOptions(ParallelMergeOptions.NotBuffered) //Allows enumeration of processed items as soon as possible (before all items are processed) at the cost of slightly lower performace
+                .Select(item =>
                 {
-                    Console.WriteLine($"{i}");
                     //Do some processing of item
-                    var newPositions = _client.GetPositions(request).Result;
+                    var newPositions = _client.GetPositions(item).Result.ToList();
                     listPositions.Add(newPositions);
-
-                    j += newPositions.Count();
-                    
                     if (i % 10 != 0)
                     {
-                        Console.WriteLine($"Positions - {newPositions.Count()}");
+                        j += newPositions.Count;
+                        Console.WriteLine($"Positions - {newPositions.Count}");
                         Console.WriteLine($"New positions - {j}");
                         Console.WriteLine($"Traders left - {i}/{inputItems.Count}");
                     }
                     
                     i++;
-                    return request;    //return either input item itself, or processed item (e.g. item.ToString())
-                });
+                    return item;    //return either input item itself, or processed item (e.g. item.ToString())
+                }).ToList();
 
             foreach (var listPosition in listPositions)
             {
                 listPositions2.AddRange(listPosition);
             }
-            
+
+            //You can use processed enumeration just like any other enumeration (send it to the customer, enumerate it yourself using foreach, etc.), items will be in the same order as in input enumeration.
+            // foreach (var processedItem in processedItems)
+            // {
+            //     //Do whatever you want with processed item
+            //     Console.WriteLine("Enumerating item " + processedItem);
+            // }
             return listPositions2;
+
         }
 
         private async Task<List<TopTrader>> GetTopByRank()
