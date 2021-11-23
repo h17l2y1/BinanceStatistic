@@ -2,7 +2,7 @@ using BinanceStatistic.Core.Models.Interfaces;
 
 namespace BinanceStatistic.Core.Models
 {
-    public class Trader : ITrader
+    public class BinanceTrader : IBinanceTrader
     {
         public string EncryptedUid { get; set; }
         public string NickName { get; set; }

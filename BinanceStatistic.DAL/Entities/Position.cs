@@ -1,6 +1,6 @@
-namespace BinanceStatistic.BLL.Models
+namespace BinanceStatistic.DAL.Entities
 {
-    public class PositionData
+    public class Position : BaseEntity
     {
         public string PositionName { get; set; }
         public int Count { get; set; }

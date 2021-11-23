@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BinanceStatistic.Core\BinanceStatistic.Core.csproj" />
+      <ProjectReference Include="..\BinanceStatistic.DAL\BinanceStatistic.DAL.csproj" />
       <ProjectReference Include="..\BinanceStatistic.ViewModels\BinanceStatistic.ViewModels.csproj" />
     </ItemGroup>
 

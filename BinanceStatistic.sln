@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.ViewModels
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.Core", "BinanceStatistic.Core\BinanceStatistic.Core.csproj", "{D6EB1511-06A3-4D60-9853-68062359E88D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.DAL", "BinanceStatistic.DAL\BinanceStatistic.DAL.csproj", "{2DEDFBA3-4145-4813-BB38-3B89A2AA408D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{D6EB1511-06A3-4D60-9853-68062359E88D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6EB1511-06A3-4D60-9853-68062359E88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6EB1511-06A3-4D60-9853-68062359E88D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DEDFBA3-4145-4813-BB38-3B89A2AA408D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DEDFBA3-4145-4813-BB38-3B89A2AA408D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DEDFBA3-4145-4813-BB38-3B89A2AA408D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DEDFBA3-4145-4813-BB38-3B89A2AA408D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

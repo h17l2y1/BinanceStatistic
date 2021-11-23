@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BinanceStatistic.Core.Models
 {
-    public class Position
+    public class BinancePosition
     {
         public decimal Amount { get; set; }
         public decimal EntryPrice { get; set; }

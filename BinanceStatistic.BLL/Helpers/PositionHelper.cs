@@ -10,20 +10,19 @@ namespace BinanceStatistic.BLL.Helpers
 {
     public class PositionHelper : IPositionHelper
     {
-        public List<Position> GetMocPositions()
+        public List<BinancePosition> GetMocPositions()
         {
-            string path;
+            string path = @"C:/Users/Anuitex-76/Desktop/Json.txt";
             
             OperatingSystem os = Environment.OSVersion;
             if (os.Platform == PlatformID.Unix)
             {
                 path = @"/Users/new/Desktop/Json.txt";
             }
-            path = @"C:/Users/Anuitex-76/Desktop/Json.txt";
             
             string jsonString = File.ReadAllText(path, Encoding.UTF8);
 
-            List<Position> positions = JsonSerializer.Deserialize<List<Position>>(jsonString);
+            List<BinancePosition> positions = JsonSerializer.Deserialize<List<BinancePosition>>(jsonString);
 
             foreach (var position in positions)
             {

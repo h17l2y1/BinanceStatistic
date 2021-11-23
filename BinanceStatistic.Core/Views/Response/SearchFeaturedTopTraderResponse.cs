@@ -5,7 +5,7 @@ namespace BinanceStatistic.Core.Views.Response
 {
     public class SearchFeaturedTopTraderResponse: BaseResponse
     {
-        public IEnumerable<TopTrader> Data { get; set; }
+        public IEnumerable<BinanceTopTrader> Data { get; set; }
 
     }
 }

@@ -3,7 +3,7 @@ using BinanceStatistic.Core.Models.Interfaces;
 
 namespace BinanceStatistic.Core.Models
 {
-    public class TopTrader : ITrader
+    public class BinanceTopTrader : IBinanceTrader
     {
         public string FutureUid { get; set; }
         public string NickName { get; set; }

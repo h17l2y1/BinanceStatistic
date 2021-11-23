@@ -7,12 +7,12 @@ namespace BinanceStatistic.Core.Interfaces
 {
     public interface IBinanceClient
     {
-        Task<IEnumerable<Trader>> GetTraders(SearchFeaturedTraderRequest request);
+        Task<IEnumerable<BinanceTrader>> GetTraders(SearchFeaturedTraderRequest request);
         
-        Task<IEnumerable<Trader>> GetTraders(SearchLeaderboardRequest request);
+        Task<IEnumerable<BinanceTrader>> GetTraders(SearchLeaderboardRequest request);
 
-        Task<IEnumerable<Position>> GetPositions(OtherPositionRequest request);
+        Task<IEnumerable<BinancePosition>> GetPositions(OtherPositionRequest request);
 
-        Task<IEnumerable<TopTrader>> GetTopTraders(SearchFeaturedTopTraderRequest request);
+        Task<IEnumerable<BinanceTopTrader>> GetTopTraders(SearchFeaturedTopTraderRequest request);
     }
 }

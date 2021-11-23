@@ -1,6 +1,6 @@
 namespace BinanceStatistic.Core.Models.Interfaces
 {
-    public interface ITrader
+    public interface IBinanceTrader
     {
         public string EncryptedUid { get; set; }
     }

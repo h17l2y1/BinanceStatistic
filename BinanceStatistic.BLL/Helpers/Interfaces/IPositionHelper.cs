@@ -5,6 +5,6 @@ namespace BinanceStatistic.BLL.Helpers.Interfaces
 {
     public interface IPositionHelper
     {
-        List<Position> GetMocPositions();
+        List<BinancePosition> GetMocPositions();
     }
 }

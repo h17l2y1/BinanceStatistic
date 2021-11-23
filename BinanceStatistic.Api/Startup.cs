@@ -21,7 +21,7 @@ namespace BinanceStatistic.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.InjectBusinessLogicDependency();
+            services.InjectBusinessLogicDependency(Configuration);
 
             // services.AddSwaggerGen(c =>
             // {
