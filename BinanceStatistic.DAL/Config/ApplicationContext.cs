@@ -10,5 +10,6 @@ namespace BinanceStatistic.DAL.Config
         }
 		
         public DbSet<Position> Positions { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
     }
 }

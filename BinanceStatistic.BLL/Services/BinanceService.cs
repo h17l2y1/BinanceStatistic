@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BinanceStatistic.BLL.Helpers.Interfaces;
 using BinanceStatistic.BLL.Services.Interface;
 using BinanceStatistic.BinanceClient.Enums;
@@ -11,29 +12,47 @@ using BinanceStatistic.BinanceClient.Models;
 using BinanceStatistic.BinanceClient.Views.Request;
 using BinanceStatistic.BinanceClient.Views.Response;
 using BinanceStatistic.DAL.Entities;
+using BinanceStatistic.DAL.Repositories.Interfaces;
 
 namespace BinanceStatistic.BLL.Services
 {
     public class BinanceService : IBinanceService
     {
         private readonly IBinanceClient _client;
+        private readonly IMapper _mapper;
+        private readonly ICurrencyRepository _currencyRepository;
         private readonly IPositionHelper _positionHelper;
+        private readonly IPositionRepository _positionRepository;
 
-        public BinanceService(IBinanceClient client, IPositionHelper positionHelper)
+        public BinanceService(IBinanceClient client, IMapper mapper, ICurrencyRepository currencyRepository,
+            IPositionHelper positionHelper, IPositionRepository positionRepository)
         {
             _client = client;
+            _mapper = mapper;
+            _currencyRepository = currencyRepository;
             _positionHelper = positionHelper;
+            _positionRepository = positionRepository;
         }
 
+        public async Task CreateAllCurrency()
+        {
+            IEnumerable<BinanceCurrency> binanceCurrencies = await _client.GetCurrencies();
+            var currencies = _mapper.Map<IEnumerable<Currency>>(binanceCurrencies);
+            await _currencyRepository.Create(currencies);
+        }
+        
         public async Task<SearchFeaturedTraderResponse> Test()
         {
             // List<OtherPositionRequest> totalTraders = await GetAllTraders();
-            // List<Position> positions = GetPositions(totalTraders);
+            // List<BinancePosition> positions = GetPositions(totalTraders);
 
             // MOC Data
             List<BinancePosition> positions = _positionHelper.GetMocPositions();
 
-            List<Position> statistic = CreateStatistic(positions);
+            List<Position> statistic = await CreateStatistic(positions);
+            await _positionRepository.Create(statistic);
+
+            // List<Position> statistic = await _positionRepository.GetAll();
 
             return null;
         }
@@ -197,15 +216,29 @@ namespace BinanceStatistic.BLL.Services
             return listTraders;
         }
 
-        private List<Position> CreateStatistic(IEnumerable<BinancePosition> positions)
+        private async Task<List<Position>> CreateStatistic(IEnumerable<BinancePosition> positions)
         {
             // for debug
-            DateTime someDay = new DateTime(2021, 11, 22);
+            DateTime someDay = new DateTime(2021, 11, 23);
 
+            foreach (var binancePosition in positions)
+            {
+                binancePosition.FormattedUpdateTime = new DateTime(
+                    binancePosition.UpdateTime[0],
+                    binancePosition.UpdateTime[1],
+                    binancePosition.UpdateTime[2],
+                    binancePosition.UpdateTime[3],
+                    binancePosition.UpdateTime[4],
+                    binancePosition.UpdateTime[5]
+                );
+            }
+            
             var groupedPositions = positions
                 // .Where(w=>w.FormattedUpdateTime.Day == someDay.Day)
                 .GroupBy(g => g.Symbol)
                 .ToList();
+
+            List<Currency> currencies = await _currencyRepository.GetAll();
 
             List<Position> statistic = groupedPositions.Select(s =>
                 {
@@ -215,14 +248,14 @@ namespace BinanceStatistic.BLL.Services
 
                     return new Position
                     {
-                        PositionName = s.Key,
+                        CurrencyId = currencies.FirstOrDefault(prop => prop.Name == s.Key)?.Id,
                         Count = totalPos,
                         Short = shortPos,
                         Long = longPos,
                         Amount = s.Sum(f => f.Amount)
                     };
                 }).Where(w => w.Count > 0)
-                .OrderByDescending(o => o.Count)
+                // .OrderByDescending(o => o.Count)
                 .ToList();
 
             return statistic;

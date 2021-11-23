@@ -14,7 +14,7 @@ namespace BinanceStatistic.BLL.Config
         {
             services.AddScoped<IBinanceHttpClient, BinanceHttpClient>();
             services.AddScoped<IRequestSender, RequestSender>();
-            services.AddScoped<IBinanceClient, BinanceClient.Client>();
+            services.AddScoped<IBinanceClient, Client>();
             services.AddScoped<IBinanceService, BinanceService>();
             services.AddScoped<IPositionHelper, PositionHelper>();
         }

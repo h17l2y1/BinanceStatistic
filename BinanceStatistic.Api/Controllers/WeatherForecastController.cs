@@ -22,5 +22,13 @@ namespace BinanceStatistic.Api.Controllers
             SearchFeaturedTraderResponse response = await _service.Test();
             return Ok(response);
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> CreateAllCurrency()
+        {
+            await _service.CreateAllCurrency();
+            return Ok();
+        }
+        
     }
 }

@@ -1,3 +1,5 @@
+using BinanceStatistic.DAL.Repositories;
+using BinanceStatistic.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BinanceStatistic.DAL.Config
@@ -6,7 +8,8 @@ namespace BinanceStatistic.DAL.Config
     {
         public static void Add(IServiceCollection services)
         {
-            // services.AddTransient<IRoundRepository, RoundRepository>();
+            services.AddTransient<IPositionRepository, PositionRepository>();
+            services.AddTransient<ICurrencyRepository, CurrencyRepository>();
         }
     }
 }

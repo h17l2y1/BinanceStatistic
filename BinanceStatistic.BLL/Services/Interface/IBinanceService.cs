@@ -6,5 +6,7 @@ namespace BinanceStatistic.BLL.Services.Interface
     public interface IBinanceService
     {
         Task<SearchFeaturedTraderResponse> Test();
+
+        Task CreateAllCurrency();
     }
 }

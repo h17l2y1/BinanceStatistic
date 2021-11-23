@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BinanceStatistic.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20211123155848_Init")]
+    [Migration("20211123222641_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,22 @@ namespace BinanceStatistic.DAL.Migrations
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("BinanceStatistic.DAL.Entities.Currency", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Currencies");
+                });
 
             modelBuilder.Entity("BinanceStatistic.DAL.Entities.Position", b =>
                 {
@@ -35,18 +51,29 @@ namespace BinanceStatistic.DAL.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CurrencyId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Long")
                         .HasColumnType("int");
-
-                    b.Property<string>("PositionName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Short")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CurrencyId");
+
                     b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("BinanceStatistic.DAL.Entities.Position", b =>
+                {
+                    b.HasOne("BinanceStatistic.DAL.Entities.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
+
+                    b.Navigation("Currency");
                 });
 #pragma warning restore 612, 618
         }

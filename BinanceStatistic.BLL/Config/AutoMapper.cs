@@ -1,4 +1,5 @@
 using AutoMapper;
+using BinanceStatistic.BLL.Config.MapperProfiles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BinanceStatistic.BLL.Config
@@ -9,7 +10,7 @@ namespace BinanceStatistic.BLL.Config
         {
             var config = new MapperConfiguration(c =>
             {
-                c.AddProfile(new MapperProfile());
+                c.AddProfile(new CurrencyProfile());
             });
 
             IMapper mapper = config.CreateMapper();

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BinanceStatistic.BinanceClient.Interfaces;
@@ -14,6 +13,7 @@ namespace BinanceStatistic.BinanceClient
         private const string LeaderboardEndpoint = "/bapi/futures/v1/public/future/leaderboard/searchLeaderboard";
         private const string LeaderboardRankEndpoint = "/bapi/futures/v2/public/future/leaderboard/getLeaderboardRank";
         private const string OtherPositionEndpoint = "/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
+        private const string GetAllCurrencies = "/fapi/v1/exchangeInfo?showall=true";
 
         private readonly IBinanceHttpClient _binanceHttpClient;
         private readonly JsonSerializerOptions _options;
@@ -57,6 +57,15 @@ namespace BinanceStatistic.BinanceClient
 
             OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(response, _options);
             IEnumerable<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
+            return positions;
+        }
+
+        public async Task<IEnumerable<BinanceCurrency>> GetCurrencies()
+        {
+            string response = await _binanceHttpClient.SendGetRequest(GetAllCurrencies);
+
+            GetAllCurrencyResponse responseModel = JsonSerializer.Deserialize<GetAllCurrencyResponse>(response, _options);
+            IEnumerable<BinanceCurrency> positions = responseModel?.Symbols;
             return positions;
         }
     }

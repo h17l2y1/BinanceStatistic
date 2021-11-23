@@ -32,6 +32,13 @@ namespace BinanceStatistic.BinanceClient
             string response = CheckResponseForError(httpResponseMessage);
             return response;
         }
+        
+        public async Task<string> SendGetRequest(string url)
+        {
+            HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(url);
+            string response = CheckResponseForError(httpResponseMessage);
+            return response;
+        }
 
         public string CheckResponseForError(HttpResponseMessage httpResponseMessage)
         {
