@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.BLL", "Bin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.ViewModels", "BinanceStatistic.ViewModels\BinanceStatistic.ViewModels.csproj", "{F85BBA09-40B1-4FA5-8D0F-6F4539EED999}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.Core", "BinanceStatistic.Core\BinanceStatistic.Core.csproj", "{D6EB1511-06A3-4D60-9853-68062359E88D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.BinanceClient", "BinanceStatistic.BinanceClient\BinanceStatistic.BinanceClient.csproj", "{D6EB1511-06A3-4D60-9853-68062359E88D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceStatistic.DAL", "BinanceStatistic.DAL\BinanceStatistic.DAL.csproj", "{2DEDFBA3-4145-4813-BB38-3B89A2AA408D}"
 EndProject

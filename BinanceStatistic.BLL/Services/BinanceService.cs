@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using BinanceStatistic.BLL.Helpers.Interfaces;
 using BinanceStatistic.BLL.Services.Interface;
-using BinanceStatistic.Core.Enums;
-using BinanceStatistic.Core.Interfaces;
-using BinanceStatistic.Core.Models;
-using BinanceStatistic.Core.Views.Request;
-using BinanceStatistic.Core.Views.Response;
+using BinanceStatistic.BinanceClient.Enums;
+using BinanceStatistic.BinanceClient.Interfaces;
+using BinanceStatistic.BinanceClient.Models;
+using BinanceStatistic.BinanceClient.Views.Request;
+using BinanceStatistic.BinanceClient.Views.Response;
 using BinanceStatistic.DAL.Entities;
 
 namespace BinanceStatistic.BLL.Services

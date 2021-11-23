@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using BinanceStatistic.BLL.Helpers.Interfaces;
-using BinanceStatistic.Core.Models;
+using BinanceStatistic.BinanceClient.Models;
 
 namespace BinanceStatistic.BLL.Helpers
 {

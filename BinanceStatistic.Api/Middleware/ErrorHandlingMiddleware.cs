@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BinanceStatistic.Core.Models;
+using BinanceStatistic.BinanceClient.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace BinanceStatistic.Api.Middleware

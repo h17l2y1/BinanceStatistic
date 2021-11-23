@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BinanceStatistic.BLL.Services.Interface;
-using BinanceStatistic.Core.Views.Response;
+using BinanceStatistic.BinanceClient.Views.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BinanceStatistic.Api.Controllers

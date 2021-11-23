@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BinanceStatistic.Core.Models;
+using BinanceStatistic.BinanceClient.Models;
 
 namespace BinanceStatistic.BLL.Helpers.Interfaces
 {

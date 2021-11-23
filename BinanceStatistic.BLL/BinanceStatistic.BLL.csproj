@@ -7,12 +7,12 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="10.1.1" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BinanceStatistic.Core\BinanceStatistic.Core.csproj" />
+      <ProjectReference Include="..\BinanceStatistic.BinanceClient\BinanceStatistic.BinanceClient.csproj" />
       <ProjectReference Include="..\BinanceStatistic.DAL\BinanceStatistic.DAL.csproj" />
       <ProjectReference Include="..\BinanceStatistic.ViewModels\BinanceStatistic.ViewModels.csproj" />
     </ItemGroup>
