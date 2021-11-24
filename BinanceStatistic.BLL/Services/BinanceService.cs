@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BinanceStatistic.BLL.Helpers.Interfaces;
 using BinanceStatistic.BLL.Services.Interface;
 using BinanceStatistic.BinanceClient.Enums;
 using BinanceStatistic.BinanceClient.Interfaces;
 using BinanceStatistic.BinanceClient.Models;
 using BinanceStatistic.BinanceClient.Views.Request;
-using BinanceStatistic.BinanceClient.Views.Response;
+using BinanceStatistic.BLL.ViewModels;
 using BinanceStatistic.DAL.Entities;
 using BinanceStatistic.DAL.Repositories.Interfaces;
 
@@ -21,224 +20,50 @@ namespace BinanceStatistic.BLL.Services
         private readonly IBinanceClient _client;
         private readonly IMapper _mapper;
         private readonly ICurrencyRepository _currencyRepository;
-        private readonly IPositionHelper _positionHelper;
         private readonly IPositionRepository _positionRepository;
+        private readonly IBinanceGrabberService _grabberService;
 
         public BinanceService(IBinanceClient client, IMapper mapper, ICurrencyRepository currencyRepository,
-            IPositionHelper positionHelper, IPositionRepository positionRepository)
+            IPositionRepository positionRepository, IBinanceGrabberService grabberService)
         {
             _client = client;
             _mapper = mapper;
             _currencyRepository = currencyRepository;
-            _positionHelper = positionHelper;
             _positionRepository = positionRepository;
+            _grabberService = grabberService;
         }
 
-        public async Task CreateAllCurrency()
+        public async Task CreateCurrencies()
         {
             IEnumerable<BinanceCurrency> binanceCurrencies = await _client.GetCurrencies();
             var currencies = _mapper.Map<IEnumerable<Currency>>(binanceCurrencies);
             await _currencyRepository.Create(currencies);
         }
         
-        public async Task<SearchFeaturedTraderResponse> Test()
+        public async Task CreatePositions()
         {
-            // List<OtherPositionRequest> totalTraders = await GetAllTraders();
-            // List<BinancePosition> positions = GetPositions(totalTraders);
-
-            // MOC Data
-            List<BinancePosition> positions = _positionHelper.GetMocPositions();
-
-            List<Position> statistic = await CreateStatistic(positions);
-            await _positionRepository.Create(statistic);
-
-            // List<Position> statistic = await _positionRepository.GetAll();
-
-            return null;
+            List<BinancePosition> binancePositions = await _grabberService.GetPositions();
+            List<Position> positions = await CreateStatistic(binancePositions);
+            await _positionRepository.Create(positions);
         }
-
-        private async Task<List<OtherPositionRequest>> GetAllTraders()
+        
+        public async Task<GetStatisticResponse> GetPositions()
         {
-            var totalTraders = new List<OtherPositionRequest>();
-
-            List<BinanceTopTrader> topTraders = await GetTopByRank();
-            totalTraders.AddRange(topTraders.Select(s => new OtherPositionRequest(s.EncryptedUid)));
-            Console.WriteLine($"topTraders - {topTraders.Count}");
-
-            List<BinanceTrader> tradersList1 = await GetLeaderboardFeaturedTrader();
-            totalTraders.AddRange(tradersList1.Select(s => new OtherPositionRequest(s.EncryptedUid)));
-            Console.WriteLine($"tradersList1 - {tradersList1.Count}");
-
-            List<BinanceTrader> tradersList2 = await GetSearchLeaderboard();
-            totalTraders.AddRange(tradersList2.Select(s => new OtherPositionRequest(s.EncryptedUid)));
-            Console.WriteLine($"tradersList2 - {tradersList2.Count}");
-
-            Console.WriteLine($"positions - {totalTraders.Count}");
-
-            return totalTraders;
+            List<Position> positions = await _positionRepository.GetAll();
+            List<PositionView> statisticResponse = _mapper.Map<List<PositionView>>(positions);
+            var response = new GetStatisticResponse(statisticResponse);
+            return response;
         }
-
-        private List<BinancePosition> GetPositions(List<OtherPositionRequest> inputItems)
+        
+        public async Task<List<Position>> CreateStatistic(IEnumerable<BinancePosition> positions)
         {
-            var listPositions = new ConcurrentBag<List<BinancePosition>>();
-            var listPositions2 = new List<BinancePosition>();
-
-            int i = 1;
-            int j = 0;
-
-            var processedItems = inputItems
-                .AsParallel() //Allow parallel processing of items
-                .AsOrdered() //Force items in output enumeration to be in the same order as in input
-                .WithMergeOptions(ParallelMergeOptions
-                    .NotBuffered) //Allows enumeration of processed items as soon as possible (before all items are processed) at the cost of slightly lower performace
-                .Select(item =>
-                {
-                    //Do some processing of item
-                    var newPositions = _client.GetPositions(item).Result.ToList();
-                    listPositions.Add(newPositions);
-                    if (i % 10 != 0)
-                    {
-                        j += newPositions.Count;
-                        Console.WriteLine($"Positions - {newPositions.Count}");
-                        Console.WriteLine($"New positions - {j}");
-                        Console.WriteLine($"Traders left - {i}/{inputItems.Count}");
-                    }
-
-                    i++;
-                    return item; //return either input item itself, or processed item (e.g. item.ToString())
-                }).ToList();
-
-            foreach (var listPosition in listPositions)
-            {
-                listPositions2.AddRange(listPosition);
-            }
-
-            //You can use processed enumeration just like any other enumeration (send it to the customer, enumerate it yourself using foreach, etc.), items will be in the same order as in input enumeration.
-            // foreach (var processedItem in processedItems)
-            // {
-            //     //Do whatever you want with processed item
-            //     Console.WriteLine("Enumerating item " + processedItem);
-            // }
-            return listPositions2;
-        }
-
-        private async Task<List<BinanceTopTrader>> GetTopByRank()
-        {
-            // TODO: redo request generator
-            // Max count of request = 6
-            var requests = new List<SearchFeaturedTopTraderRequest>
-            {
-                new SearchFeaturedTopTraderRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    StatisticsType = nameof(StatisticType.PNL)
-                },
-                new SearchFeaturedTopTraderRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    StatisticsType = nameof(StatisticType.ROI)
-                }
-            };
-
-            var listTraders = new List<BinanceTopTrader>();
-            for (int i = 0; i < requests.Count; i++)
-            {
-                IEnumerable<BinanceTopTrader> position = await _client.GetTopTraders(requests[i]);
-                listTraders.AddRange(position);
-            }
-
-            return listTraders;
-        }
-
-        private async Task<List<BinanceTrader>> GetLeaderboardFeaturedTrader()
-        {
-            // TODO: redo request generator
-            // Max count of request = 9
-            var requests = new List<SearchFeaturedTraderRequest>
-            {
-                new SearchFeaturedTraderRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    SortType = nameof(SortType.PNL)
-                },
-                new SearchFeaturedTraderRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    SortType = nameof(SortType.ROI)
-                },
-                new SearchFeaturedTraderRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    SortType = nameof(SortType.FOLLOWERS)
-                }
-            };
-
-            var listTraders = new List<BinanceTrader>();
-            for (int i = 0; i < requests.Count; i++)
-            {
-                IEnumerable<BinanceTrader> position = await _client.GetTraders(requests[i]);
-                listTraders.AddRange(position);
-            }
-
-            return listTraders;
-        }
-
-        private async Task<List<BinanceTrader>> GetSearchLeaderboard()
-        {
-            // TODO: redo request generator
-            // Max count of request = 18
-            var requests = new List<SearchLeaderboardRequest>
-            {
-                new SearchLeaderboardRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    SortType = nameof(SortType.PNL)
-                },
-                new SearchLeaderboardRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    SortType = nameof(SortType.ROI)
-                },
-                new SearchLeaderboardRequest
-                {
-                    PeriodType = nameof(PeriodType.DAILY),
-                    SortType = nameof(SortType.FOLLOWERS)
-                }
-            };
-
-            var listTraders = new List<BinanceTrader>();
-            for (int i = 0; i < requests.Count; i++)
-            {
-                IEnumerable<BinanceTrader> position = await _client.GetTraders(requests[i]);
-                listTraders.AddRange(position);
-            }
-
-            return listTraders;
-        }
-
-        private async Task<List<Position>> CreateStatistic(IEnumerable<BinancePosition> positions)
-        {
-            // for debug
-            DateTime someDay = new DateTime(2021, 11, 23);
-
-            foreach (var binancePosition in positions)
-            {
-                binancePosition.FormattedUpdateTime = new DateTime(
-                    binancePosition.UpdateTime[0],
-                    binancePosition.UpdateTime[1],
-                    binancePosition.UpdateTime[2],
-                    binancePosition.UpdateTime[3],
-                    binancePosition.UpdateTime[4],
-                    binancePosition.UpdateTime[5]
-                );
-            }
-            
-            var groupedPositions = positions
-                // .Where(w=>w.FormattedUpdateTime.Day == someDay.Day)
-                .GroupBy(g => g.Symbol)
-                .ToList();
-
             List<Currency> currencies = await _currencyRepository.GetAll();
+            
+            // for filter
+            DateTime someDay = new DateTime(2021, 11, 24);
+
+            var groupedPositions = positions.Where(w=>w.FormattedUpdateTime.Day == someDay.Day)
+                                                                   .GroupBy(g => g.Symbol);
 
             List<Position> statistic = groupedPositions.Select(s =>
                 {
@@ -259,6 +84,53 @@ namespace BinanceStatistic.BLL.Services
                 .ToList();
 
             return statistic;
+        }
+        
+        public async Task<GetStatisticResponse> GetPositionsWithInterval(int interval)
+        {
+            DateTime lastUpdate = await _positionRepository.GetLastUpdate();
+
+            List<Position> positions = await _positionRepository.GetWithInterval(lastUpdate, interval);
+
+            List<PositionView> view = positions.GroupBy(g => g.CurrencyId)
+                .Select(s =>
+                {
+                    var positions = s.ToArray();
+
+                    var position = new PositionView();
+                    position.Currency = positions[0].Currency.Name;
+                    
+                    position.Long = positions.Length == 2 ? GetDiff(positions[0].Long, positions[1].Long) : 0;
+                    position.Short = positions.Length == 2 ? GetDiff(positions[0].Short, positions[1].Short) : 0;
+                    position.Count = positions.Length == 2 ? GetDiff(positions[0].Count, positions[1].Count) : 0;
+
+                    // position.LongWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Long} Now {positions[1].Long} Diff {GetDiff(positions[0].Long, positions[1].Long)}" : "0";
+                    // position.ShortWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Short} Now {positions[1].Short} Diff {GetDiff(positions[0].Short, positions[1].Short)}" : "0";
+                    // position.CountWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Count} Now {positions[1].Count} Diff {GetDiff(positions[0].Count, positions[1].Count)}" : "0";
+
+                    return position;
+                })
+                .ToList();
+
+            List<PositionView> statisticResponse = _mapper.Map<List<PositionView>>(view);
+            var response = new GetStatisticResponse(statisticResponse);
+            return response;
+        }
+
+        private int GetDiff(int first, int second)
+        {
+            int diff = 0;
+            
+            if (first > second)
+            {
+                diff = second - first;
+            }
+            if (first < second)
+            {
+                diff = second - first;
+            }
+
+            return diff;
         }
     }
 }

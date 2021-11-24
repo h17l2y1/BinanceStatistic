@@ -59,6 +59,15 @@ namespace BinanceStatistic.BinanceClient
             IEnumerable<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
             return positions;
         }
+        
+        public async Task<IEnumerable<BinancePosition>> GetPositionsSingle(OtherPositionRequest request)
+        {
+            string response = await _binanceHttpClient.SendPostRequest(OtherPositionEndpoint, request);
+
+            OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(response, _options);
+            IEnumerable<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
+            return positions;
+        }
 
         public async Task<IEnumerable<BinanceCurrency>> GetCurrencies()
         {

@@ -11,6 +11,7 @@ namespace BinanceStatistic.BLL.Config
             var config = new MapperConfiguration(c =>
             {
                 c.AddProfile(new CurrencyProfile());
+                c.AddProfile(new StatisticProfile());
             });
 
             IMapper mapper = config.CreateMapper();

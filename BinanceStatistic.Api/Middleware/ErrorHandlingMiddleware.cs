@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using BinanceStatistic.BinanceClient.Models;
 using Microsoft.AspNetCore.Http;

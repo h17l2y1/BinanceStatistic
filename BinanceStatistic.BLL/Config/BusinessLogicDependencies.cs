@@ -1,5 +1,3 @@
-using BinanceStatistic.BLL.Helpers;
-using BinanceStatistic.BLL.Helpers.Interfaces;
 using BinanceStatistic.BLL.Services;
 using BinanceStatistic.BLL.Services.Interface;
 using BinanceStatistic.BinanceClient;
@@ -16,7 +14,7 @@ namespace BinanceStatistic.BLL.Config
             services.AddScoped<IRequestSender, RequestSender>();
             services.AddScoped<IBinanceClient, Client>();
             services.AddScoped<IBinanceService, BinanceService>();
-            services.AddScoped<IPositionHelper, PositionHelper>();
+            services.AddScoped<IBinanceGrabberService, BinanceGrabberService>();
         }
     }
 }
