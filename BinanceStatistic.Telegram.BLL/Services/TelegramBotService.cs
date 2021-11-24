@@ -29,6 +29,8 @@ namespace BinanceStatistic.Telegram.BLL.Services
                 
         public async Task SetWebhookAsync()
         {
+            WebhookInfo> GetWebhookInfoAsync
+            
             var telegramWebHook = $"{_webHook}{_telegramUrl}";
             await _telegramClient.SetWebhookAsync(telegramWebHook);
         }
