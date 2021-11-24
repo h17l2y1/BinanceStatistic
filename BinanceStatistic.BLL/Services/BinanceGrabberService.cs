@@ -21,6 +21,12 @@ namespace BinanceStatistic.BLL.Services
             _client = client;
         }
 
+        public async Task<IEnumerable<BinanceCurrency>> GrabbCurrencies()
+        {
+            IEnumerable<BinanceCurrency> binanceCurrencies = await _client.GetCurrencies();
+            return binanceCurrencies;
+        }
+        
         public async Task<List<BinancePosition>> GetPositions()
         {
             List<OtherPositionRequest> totalTraders = await GetAllTraders();

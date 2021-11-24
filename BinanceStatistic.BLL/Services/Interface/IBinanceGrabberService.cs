@@ -12,5 +12,7 @@ namespace BinanceStatistic.BLL.Services.Interface
         List<BinancePosition> GetPositions(List<OtherPositionRequest> requests);
 
         Task<List<BinancePosition>> GetPositions();
+
+        Task<IEnumerable<BinanceCurrency>> GrabbCurrencies();
     }
 }

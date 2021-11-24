@@ -12,7 +12,7 @@ namespace BinanceStatistic.BLL.Services.Interface
 
         Task CreateCurrencies();
 
-        Task<List<Position>> CreateStatistic(IEnumerable<BinancePosition> positions);
+        Task<IEnumerable<Position>> CreateStatistic(IEnumerable<BinancePosition> positions);
 
         Task CreatePositions();
 

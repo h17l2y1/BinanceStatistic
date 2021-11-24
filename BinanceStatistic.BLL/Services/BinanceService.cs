@@ -35,18 +35,18 @@ namespace BinanceStatistic.BLL.Services
 
         public async Task CreateCurrencies()
         {
-            IEnumerable<BinanceCurrency> binanceCurrencies = await _client.GetCurrencies();
+            IEnumerable<BinanceCurrency> binanceCurrencies = await _grabberService.GrabbCurrencies();;
             var currencies = _mapper.Map<IEnumerable<Currency>>(binanceCurrencies);
             await _currencyRepository.Create(currencies);
         }
-        
+
         public async Task CreatePositions()
         {
             List<BinancePosition> binancePositions = await _grabberService.GetPositions();
-            List<Position> positions = await CreateStatistic(binancePositions);
+            IEnumerable<Position> positions = await CreateStatistic(binancePositions);
             await _positionRepository.Create(positions);
         }
-        
+
         public async Task<GetStatisticResponse> GetPositions()
         {
             List<Position> positions = await _positionRepository.GetAll();
@@ -54,18 +54,18 @@ namespace BinanceStatistic.BLL.Services
             var response = new GetStatisticResponse(statisticResponse);
             return response;
         }
-        
-        public async Task<List<Position>> CreateStatistic(IEnumerable<BinancePosition> positions)
+
+        public async Task<IEnumerable<Position>> CreateStatistic(IEnumerable<BinancePosition> positions)
         {
             List<Currency> currencies = await _currencyRepository.GetAll();
-            
-            // for filter
+
+            // for temporary filter
             DateTime someDay = new DateTime(2021, 11, 24);
 
-            var groupedPositions = positions.Where(w=>w.FormattedUpdateTime.Day == someDay.Day)
-                                                                   .GroupBy(g => g.Symbol);
-
-            List<Position> statistic = groupedPositions.Select(s =>
+            IEnumerable<Position> groupedPositions = positions
+                .Where(w => w.FormattedUpdateTime.Day == someDay.Day)
+                .GroupBy(g => g.Symbol)
+                .Select(s =>
                 {
                     int longPos = s.Count(c => c.Amount > 0);
                     int shortPos = s.Count(c => c.Amount < 0);
@@ -79,13 +79,12 @@ namespace BinanceStatistic.BLL.Services
                         Long = longPos,
                         Amount = s.Sum(f => f.Amount)
                     };
-                }).Where(w => w.Count > 0)
-                // .OrderByDescending(o => o.Count)
-                .ToList();
+                })
+                .Where(w => w.Count > 0);
 
-            return statistic;
+            return groupedPositions;
         }
-        
+
         public async Task<GetStatisticResponse> GetPositionsWithInterval(int interval)
         {
             DateTime lastUpdate = await _positionRepository.GetLastUpdate();
@@ -99,14 +98,14 @@ namespace BinanceStatistic.BLL.Services
 
                     var position = new PositionView();
                     position.Currency = positions[0].Currency.Name;
-                    
+
                     position.Long = positions.Length == 2 ? GetDiff(positions[0].Long, positions[1].Long) : 0;
                     position.Short = positions.Length == 2 ? GetDiff(positions[0].Short, positions[1].Short) : 0;
                     position.Count = positions.Length == 2 ? GetDiff(positions[0].Count, positions[1].Count) : 0;
 
-                    // position.LongWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Long} Now {positions[1].Long} Diff {GetDiff(positions[0].Long, positions[1].Long)}" : "0";
-                    // position.ShortWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Short} Now {positions[1].Short} Diff {GetDiff(positions[0].Short, positions[1].Short)}" : "0";
-                    // position.CountWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Count} Now {positions[1].Count} Diff {GetDiff(positions[0].Count, positions[1].Count)}" : "0";
+                    position.LongWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Long} Now {positions[1].Long} Diff {GetDiff(positions[0].Long, positions[1].Long)}" : "0";
+                    position.ShortWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Short} Now {positions[1].Short} Diff {GetDiff(positions[0].Short, positions[1].Short)}" : "0";
+                    position.CountWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Count} Now {positions[1].Count} Diff {GetDiff(positions[0].Count, positions[1].Count)}" : "0";
 
                     return position;
                 })
@@ -120,11 +119,12 @@ namespace BinanceStatistic.BLL.Services
         private int GetDiff(int first, int second)
         {
             int diff = 0;
-            
+
             if (first > second)
             {
                 diff = second - first;
             }
+
             if (first < second)
             {
                 diff = second - first;
