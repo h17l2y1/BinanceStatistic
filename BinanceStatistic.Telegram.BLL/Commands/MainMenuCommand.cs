@@ -20,7 +20,7 @@ namespace BinanceStatistic.Telegram.BLL.Commands
             // var user = update.
             
             await client.SendTextMessageAsync(update.Message.Chat.Id,
-                MessageConstant.ABOUT_SUBSCRIBE,
+                MessageConstant.BACK_TO_MENU,
                 null,
                 null,
                 null,
@@ -37,7 +37,7 @@ namespace BinanceStatistic.Telegram.BLL.Commands
                 {
                     new KeyboardButton[] { "None" },
                     new KeyboardButton[] { ButtonConstant.SUBSCRIBE },
-                    new KeyboardButton[] { MessageConstant.BACK_TO_MENU },
+                    new KeyboardButton[] { MessageConstant.ABOUT },
                 })
             {
                 ResizeKeyboard = true

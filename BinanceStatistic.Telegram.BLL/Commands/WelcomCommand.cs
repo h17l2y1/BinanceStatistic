@@ -17,6 +17,9 @@ namespace BinanceStatistic.Telegram.BLL.Commands
 
         public async Task Execute(Update update, ITelegramBotClient client)
         {
+            // Get user id for subscriptions
+            // var user = update.
+            
             await client.SendTextMessageAsync(update.Message.Chat.Id,
                 MessageConstant.WELCOME_MESSAGE,
                 null,

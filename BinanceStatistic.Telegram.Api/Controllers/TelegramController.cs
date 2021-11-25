@@ -24,12 +24,7 @@ namespace BinanceStatistic.Telegram.Api.Controllers
             {
                 throw new Exception("Invalid model");
             }
-        
-            if (update.Message.Text == null)
-            {
-                return Ok();
-            }
-        
+
             await _service.Update(update);
             return Ok();
         }

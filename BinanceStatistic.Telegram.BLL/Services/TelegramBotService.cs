@@ -12,26 +12,34 @@ namespace BinanceStatistic.Telegram.BLL.Services
     public class TelegramBotService : ITelegramBotService
     {
         private readonly ITelegramBotClient _telegramClient;
-        private readonly IMapper _mapper;
         private IEnumerable<ICommand> _commands;
 
-        public TelegramBotService(ITelegramBotClient telegramClient, IMapper mapper)
+        public TelegramBotService(ITelegramBotClient telegramClient)
         {
             _telegramClient = telegramClient;
-            _mapper = mapper;
             InitCommands();
         }
         
         public async Task Update(Update update)
         {
-            foreach (ICommand command in _commands)
+            if (update.Message?.Text != null)
             {
-                bool isCommandFound = command.Contains(update.Message?.Text);
-                if (isCommandFound)
+                foreach (ICommand command in _commands)
                 {
-                    await command.Execute(update, _telegramClient);
-                    break;
+                    var text = update.Message?.Text;
+                    bool isCommandFound = command.Contains(update.Message?.Text);
+                    if (isCommandFound)
+                    {
+                        await command.Execute(update, _telegramClient);
+                        break;
+                    }
                 }
+            }
+
+            if (update.CallbackQuery?.Data != null)
+            {
+                // var xxx = await command.Execute(update, _telegramClient);
+
             }
         }
         
@@ -39,12 +47,10 @@ namespace BinanceStatistic.Telegram.BLL.Services
         {
             _commands = new List<ICommand>
             {
-                // TODO: add validation
-                //new ErrorCommand(),
+                // new ErrorCommand(),
                 new WelcomeCommand(),
                 new MainMenuCommand(),
                 new SubscribeCommand(),
-                // new DevelopCommand(_leagueRepository, lastVersion)
             };
         }
     }
