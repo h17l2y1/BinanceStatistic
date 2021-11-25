@@ -21,7 +21,7 @@ namespace BinanceStatistic.Telegram.Api
         {
             services.InjectBusinessLogicDependency(Configuration);
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

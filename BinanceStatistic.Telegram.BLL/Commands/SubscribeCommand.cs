@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using BinanceStatistic.Telegram.BLL.Commands.Interfaces;
 using BinanceStatistic.Telegram.BLL.Constants;
@@ -8,17 +7,20 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BinanceStatistic.Telegram.BLL.Commands
 {
-    public class WelcomeCommand : ICommand
+    public class SubscribeCommand : ICommand
     {
         public bool Contains(string command)
         {
-            return command.ToLower().Contains(ButtonConstant.START);
+            return command.Contains(ButtonConstant.SUBSCRIBE);
         }
 
         public async Task Execute(Update update, ITelegramBotClient client)
         {
+            // Get user id for subscriptions
+            // var user = update.
+            
             await client.SendTextMessageAsync(update.Message.Chat.Id,
-                MessageConstant.WELCOME_MESSAGE,
+                MessageConstant.ABOUT_SUBSCRIBE,
                 null,
                 null,
                 null,
@@ -27,14 +29,19 @@ namespace BinanceStatistic.Telegram.BLL.Commands
                 null,
                 GetMenu());
         }
-
+        
         private ReplyKeyboardMarkup GetMenu()
         {
-            IEnumerable<KeyboardButton> keyboard = new List<KeyboardButton>
+            ReplyKeyboardMarkup menu = new ReplyKeyboardMarkup(
+                new KeyboardButton[][]
+                {
+                    new KeyboardButton[] { MessageConstant.MIN5, MessageConstant.MIN15, MessageConstant.MIN30 },
+                    new KeyboardButton[] { MessageConstant.BACK_TO_MENU },
+                })
             {
-                new KeyboardButton(ButtonConstant.TO_MAIN_MENU)
+                ResizeKeyboard = true
             };
-            ReplyKeyboardMarkup menu = new ReplyKeyboardMarkup(keyboard);
+            
             return menu;
         }
     }

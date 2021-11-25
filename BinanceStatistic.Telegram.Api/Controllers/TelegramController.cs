@@ -17,13 +17,6 @@ namespace BinanceStatistic.Telegram.Api.Controllers
             _service = service;
         }
         
-        [HttpGet]
-        public async Task<IActionResult> SetWebHook()
-        {
-            await _service.SetWebhookAsync();
-            return Ok();
-        }
-        
         [HttpPost]
         public async Task<IActionResult> Update([FromBody]Update update)
         {

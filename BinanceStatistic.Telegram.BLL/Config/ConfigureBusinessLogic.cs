@@ -1,3 +1,4 @@
+using BinanceStatistic.DAL.Config;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 
@@ -10,6 +11,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
             AutoMapper.Add(services);
             BusinessLogicDependencies.Add(services);
             TelegramBot.Add(services, configuration);
+            // services.InjectDataAccessDependency(configuration);
         }
     }
 }

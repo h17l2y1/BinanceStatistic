@@ -6,7 +6,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
 {
     public static class BusinessLogicDependencies
     {
-        public static void Add(this IServiceCollection services)
+        public static void Add(IServiceCollection services)
         {
             services.AddScoped<ITelegramBotService, TelegramBotService>();
         }
