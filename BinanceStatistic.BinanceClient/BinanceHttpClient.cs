@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BinanceStatistic.BinanceClient.Interfaces;
+using BinanceStatistic.BinanceClient.Models;
 using Newtonsoft.Json;
 
 namespace BinanceStatistic.BinanceClient
@@ -68,6 +69,36 @@ namespace BinanceStatistic.BinanceClient
                 var stringContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
                 HttpResponseMessage httpResponseMessage = await HttpClient.PostAsync(endPoint, stringContent);
 
+                string response = CheckResponseForError(httpResponseMessage);
+
+                return response;
+            }
+            catch (Exception ex) when (ex is OperationCanceledException || ex is TaskCanceledException)
+            {
+                Console.WriteLine("Timed out");
+                TripCircuit(reason: $"Timed out");
+                return UNAVAILABLE;
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }
+        
+        public async Task<string> SendMultiPostRequests2(BinanceRequestTemplate request)
+        {
+            try
+            {
+                await semaphore.WaitAsync();
+
+                if (IsTripped())
+                {
+                    return UNAVAILABLE;
+                }
+                
+                HttpResponseMessage httpResponseMessage = await HttpClient.PostAsync(request.Endpoint, request.Content);
+                
+                // TODO: try remove serialize process out of ddos process
                 string response = CheckResponseForError(httpResponseMessage);
 
                 return response;

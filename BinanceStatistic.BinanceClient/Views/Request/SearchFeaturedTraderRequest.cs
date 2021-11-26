@@ -4,6 +4,12 @@ namespace BinanceStatistic.BinanceClient.Views.Request
 {
     public class SearchFeaturedTraderRequest : BaseSearchTraderRequest
     {
+        public SearchFeaturedTraderRequest(string sortType, string periodType)
+        {
+            SortType = sortType;
+            PeriodType = periodType;
+        }
+
         public SearchFeaturedTraderRequest()
         {
             Limit = 200;

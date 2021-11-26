@@ -27,7 +27,6 @@ namespace BinanceStatistic.BinanceClient
         public async Task<IEnumerable<BinanceTrader>> GetTraders(SearchFeaturedTraderRequest request)
         {
             string response = await _binanceHttpClient.SendMultiPostRequests(LeaderboardEndpoint, request);
-
             SearchFeaturedTraderResponse responseModel = JsonSerializer.Deserialize<SearchFeaturedTraderResponse>(response, _options);
             IEnumerable<BinanceTrader> traders = responseModel?.Data;
             return traders;
@@ -36,7 +35,6 @@ namespace BinanceStatistic.BinanceClient
         public async Task<IEnumerable<BinanceTrader>> GetTraders(SearchLeaderboardRequest request)
         {
             string response = await _binanceHttpClient.SendMultiPostRequests(LeaderboardEndpoint, request);
-
             SearchFeaturedTraderResponse responseModel = JsonSerializer.Deserialize<SearchFeaturedTraderResponse>(response, _options);
             IEnumerable<BinanceTrader> traders = responseModel?.Data;
             return traders;
@@ -45,16 +43,30 @@ namespace BinanceStatistic.BinanceClient
         public async Task<IEnumerable<BinanceTopTrader>> GetTopTraders(SearchFeaturedTopTraderRequest request)
         {
             string response = await _binanceHttpClient.SendMultiPostRequests(LeaderboardRankEndpoint, request);
-
             SearchFeaturedTopTraderResponse responseModel = JsonSerializer.Deserialize<SearchFeaturedTopTraderResponse>(response, _options);
             IEnumerable<BinanceTopTrader> traders = responseModel?.Data;
             return traders;
         }
         
+        public async Task<IEnumerable<BinanceTopTrader>> GetTopTraders2(List<BinanceRequestTemplate> requests)
+        {
+            // var xxx = new BinanceRequestTemplate
+            
+            var listTraders = new List<BinanceTopTrader>();
+            for (int i = 0; i < requests.Count; i++)
+            {
+                string response = await _binanceHttpClient.SendMultiPostRequests2(requests[i]);
+                SearchFeaturedTopTraderResponse responseModel = JsonSerializer.Deserialize<SearchFeaturedTopTraderResponse>(response, _options);
+                IEnumerable<BinanceTopTrader> traders = responseModel?.Data;
+                listTraders.AddRange(traders);
+            }
+
+            return listTraders;
+        }
+        
         public async Task<IEnumerable<BinancePosition>> GetPositions(OtherPositionRequest request)
         {
             string response = await _binanceHttpClient.SendMultiPostRequests(OtherPositionEndpoint, request);
-
             OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(response, _options);
             IEnumerable<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
             return positions;
@@ -63,7 +75,6 @@ namespace BinanceStatistic.BinanceClient
         public async Task<IEnumerable<BinancePosition>> GetPositionsSingle(OtherPositionRequest request)
         {
             string response = await _binanceHttpClient.SendPostRequest(OtherPositionEndpoint, request);
-
             OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(response, _options);
             IEnumerable<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
             return positions;
@@ -72,7 +83,6 @@ namespace BinanceStatistic.BinanceClient
         public async Task<IEnumerable<BinanceCurrency>> GetCurrencies()
         {
             string response = await _binanceHttpClient.SendGetRequest(GetAllCurrencies);
-
             GetAllCurrencyResponse responseModel = JsonSerializer.Deserialize<GetAllCurrencyResponse>(response, _options);
             IEnumerable<BinanceCurrency> positions = responseModel?.Symbols;
             return positions;

@@ -2,6 +2,13 @@ namespace BinanceStatistic.BinanceClient.Views.Request
 {
     public class SearchLeaderboardRequest : BaseSearchTraderRequest
     {
+        public SearchLeaderboardRequest(string sortType, string additionalPeriodType)
+        {
+            Limit = 200;
+            SortType = sortType;
+            PeriodType = additionalPeriodType;
+        }
+        
         public SearchLeaderboardRequest()
         {
             Limit = 200;
