@@ -36,9 +36,16 @@ namespace BinanceStatistic.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task RemoveAsync(IEnumerable<TEntity> entities)
+        public virtual async Task Remove(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);
+            await _context.SaveChangesAsync();
+        }
+        
+        public virtual async Task RemoveById(string entityId)
+        {
+            TEntity entity = await _dbSet.SingleOrDefaultAsync(x => x.Id == entityId);
+            _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
         }
         

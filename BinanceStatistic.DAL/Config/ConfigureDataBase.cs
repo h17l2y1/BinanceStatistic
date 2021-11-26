@@ -9,6 +9,7 @@ namespace BinanceStatistic.DAL.Config
         {
             DatabaseDependencies.Add(services);
             DbConnection.Add(services, configuration);
+            DataSeeder.Seed(services);
         }
     }
 }

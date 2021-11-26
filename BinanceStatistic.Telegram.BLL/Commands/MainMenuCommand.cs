@@ -11,16 +11,13 @@ namespace BinanceStatistic.Telegram.BLL.Commands
     {
         public bool Contains(string command)
         {
-            return command.Contains(ButtonConstant.TO_MAIN_MENU);
+            return command.Contains(Constants.Constants.Button.Keyboard.ToMenu);
         }
 
         public async Task Execute(Update update, ITelegramBotClient client)
         {
-            // Get user id for subscriptions
-            // var user = update.
-            
             await client.SendTextMessageAsync(update.Message.Chat.Id,
-                MessageConstant.BACK_TO_MENU,
+                Constants.Constants.Button.Keyboard.ToMenu,
                 null,
                 null,
                 null,
@@ -36,8 +33,8 @@ namespace BinanceStatistic.Telegram.BLL.Commands
                 new KeyboardButton[][]
                 {
                     new KeyboardButton[] { "None" },
-                    new KeyboardButton[] { ButtonConstant.SUBSCRIBE },
-                    new KeyboardButton[] { MessageConstant.ABOUT },
+                    new KeyboardButton[] { Constants.Constants.Button.Keyboard.Subscribe },
+                    new KeyboardButton[] { Constants.Constants.Button.Keyboard.About },
                 })
             {
                 ResizeKeyboard = true

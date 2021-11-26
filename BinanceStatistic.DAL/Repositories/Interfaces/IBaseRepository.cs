@@ -11,6 +11,8 @@ namespace BinanceStatistic.DAL.Repositories.Interfaces
 
         Task Create(IEnumerable<TEntity> collection);
 
-        Task RemoveAsync(IEnumerable<TEntity> entities);
+        Task Remove(IEnumerable<TEntity> entities);
+
+        Task RemoveById(string entityId);
     }
 }

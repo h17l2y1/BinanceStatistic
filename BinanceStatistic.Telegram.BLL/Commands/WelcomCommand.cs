@@ -1,27 +1,32 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using BinanceStatistic.DAL.Repositories.Interfaces;
 using BinanceStatistic.Telegram.BLL.Commands.Interfaces;
-using BinanceStatistic.Telegram.BLL.Constants;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using User = BinanceStatistic.DAL.Entities.User;
 
 namespace BinanceStatistic.Telegram.BLL.Commands
 {
     public class WelcomeCommand : ICommand
     {
+        private readonly IUserRepository _userRepository;
+
+        public WelcomeCommand(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         public bool Contains(string command)
         {
-            return command.ToLower().Contains(ButtonConstant.START);
+            return command.ToLower().Contains(Constants.Constants.Button.Keyboard.Start);
         }
 
         public async Task Execute(Update update, ITelegramBotClient client)
         {
-            // Get user id for subscriptions
-            // var user = update.
-            
+            await CreateUser(update);
             await client.SendTextMessageAsync(update.Message.Chat.Id,
-                MessageConstant.WELCOME_MESSAGE,
+                Constants.Constants.Message.Welcome,
                 null,
                 null,
                 null,
@@ -33,12 +38,29 @@ namespace BinanceStatistic.Telegram.BLL.Commands
 
         private ReplyKeyboardMarkup GetMenu()
         {
-            IEnumerable<KeyboardButton> keyboard = new List<KeyboardButton>
+            var menu = new ReplyKeyboardMarkup(new KeyboardButton(Constants.Constants.Button.Keyboard.ToMenu))
             {
-                new KeyboardButton(ButtonConstant.TO_MAIN_MENU)
+                ResizeKeyboard = true
             };
-            ReplyKeyboardMarkup menu = new ReplyKeyboardMarkup(keyboard);
+
             return menu;
+        }
+
+        private async Task CreateUser(Update update)
+        {
+            var user = new User
+            {
+                TelegramId = update.Message.From.Id,
+                FirstName = update.Message.From.FirstName,
+                UserName = update.Message.From.Username,
+                Language = update.Message.From.LanguageCode,
+            };
+
+            User dbUser = await _userRepository.FindUserByTelegramId(user.TelegramId);
+            if (dbUser == null)
+            {
+                await _userRepository.Create(user);
+            }
         }
     }
 }

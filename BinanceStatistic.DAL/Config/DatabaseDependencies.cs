@@ -11,6 +11,8 @@ namespace BinanceStatistic.DAL.Config
             services.AddTransient<IPositionRepository, PositionRepository>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ISubscribeRepository, SubscribeRepository>();
+            services.AddTransient<IUserSubscribeRepository, UserSubscribeRepository>();
         }
     }
 }

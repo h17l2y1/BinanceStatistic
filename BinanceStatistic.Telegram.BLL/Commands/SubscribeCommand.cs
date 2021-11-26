@@ -1,64 +1,42 @@
 using System.Threading.Tasks;
+using BinanceStatistic.DAL.Repositories.Interfaces;
 using BinanceStatistic.Telegram.BLL.Commands.Interfaces;
-using BinanceStatistic.Telegram.BLL.Constants;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using User = BinanceStatistic.DAL.Entities.User;
 
 namespace BinanceStatistic.Telegram.BLL.Commands
 {
-    public class SubscribeCommand : ICommand
+    public class SubscribeCommand : InlineMenu, ICommand
     {
+        private readonly IUserRepository _userRepository;
+
+        public SubscribeCommand(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+        
         public bool Contains(string command)
         {
-            return command.Contains(ButtonConstant.SUBSCRIBE);
+            return command.Contains(Constants.Constants.Button.Keyboard.Subscribe);
         }
 
         public async Task Execute(Update update, ITelegramBotClient client)
         {
+            User user = await _userRepository.GetUserWithSubscriptions(update.Message.From.Id);
+            
             await client.SendTextMessageAsync(update.Message.Chat.Id,
-                MessageConstant.ABOUT_SUBSCRIBE,
+                Constants.Constants.Message.AboutSubscribe,
                 ParseMode.MarkdownV2,
                 null,
                 true,
                 true,
                 null,
                 null,
-                // GetMenu()
-                GetMenuInline()
-                );
-        }
-        
-        private InlineKeyboardMarkup GetMenuInline()
-        {
-            InlineKeyboardMarkup menu = new InlineKeyboardMarkup(
-                new InlineKeyboardButton[][]
-                {
-                    new InlineKeyboardButton[]
-                    {
-                        MessageConstant.MIN5, 
-                        MessageConstant.MIN15, 
-                        MessageConstant.MIN30
-                    },
-                });
-            
-            return menu;
-        }
-        
-        private ReplyKeyboardMarkup GetMenu()
-        {
-            ReplyKeyboardMarkup menu = new ReplyKeyboardMarkup(
-                new KeyboardButton[][]
-                {
-                    new KeyboardButton[] { MessageConstant.MIN5, MessageConstant.MIN15, MessageConstant.MIN30 },
-                    new KeyboardButton[] { MessageConstant.BACK_TO_MENU },
-                })
-            {
-                ResizeKeyboard = true
-            };
-            
-            return menu;
+                GetMenuInline(user.UserSubscribes)
+            );
         }
     }
 }

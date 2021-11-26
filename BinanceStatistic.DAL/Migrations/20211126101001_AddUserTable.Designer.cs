@@ -4,14 +4,16 @@ using BinanceStatistic.DAL.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BinanceStatistic.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20211126101001_AddUserTable")]
+    partial class AddUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,25 +67,6 @@ namespace BinanceStatistic.DAL.Migrations
                     b.ToTable("Positions");
                 });
 
-            modelBuilder.Entity("BinanceStatistic.DAL.Entities.Subscribe", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Minutes")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Subscribes");
-                });
-
             modelBuilder.Entity("BinanceStatistic.DAL.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -109,29 +92,6 @@ namespace BinanceStatistic.DAL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BinanceStatistic.DAL.Entities.UserSubscribe", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SubscribeId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubscribeId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserSubscribes");
-                });
-
             modelBuilder.Entity("BinanceStatistic.DAL.Entities.Position", b =>
                 {
                     b.HasOne("BinanceStatistic.DAL.Entities.Currency", "Currency")
@@ -139,31 +99,6 @@ namespace BinanceStatistic.DAL.Migrations
                         .HasForeignKey("CurrencyId");
 
                     b.Navigation("Currency");
-                });
-
-            modelBuilder.Entity("BinanceStatistic.DAL.Entities.UserSubscribe", b =>
-                {
-                    b.HasOne("BinanceStatistic.DAL.Entities.Subscribe", "Subscribe")
-                        .WithMany("UserSubscribes")
-                        .HasForeignKey("SubscribeId");
-
-                    b.HasOne("BinanceStatistic.DAL.Entities.User", "User")
-                        .WithMany("UserSubscribes")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Subscribe");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BinanceStatistic.DAL.Entities.Subscribe", b =>
-                {
-                    b.Navigation("UserSubscribes");
-                });
-
-            modelBuilder.Entity("BinanceStatistic.DAL.Entities.User", b =>
-                {
-                    b.Navigation("UserSubscribes");
                 });
 #pragma warning restore 612, 618
         }
