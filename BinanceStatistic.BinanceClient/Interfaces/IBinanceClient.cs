@@ -1,22 +1,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BinanceStatistic.BinanceClient.Models;
-using BinanceStatistic.BinanceClient.Views.Request;
+using BinanceStatistic.BinanceClient.Models.Interfaces;
 
 namespace BinanceStatistic.BinanceClient.Interfaces
 {
     public interface IBinanceClient
     {
-        Task<IEnumerable<BinanceTrader>> GetTraders(SearchFeaturedTraderRequest request);
+        Task<IEnumerable<BinanceCurrency>> GrabbCurrencies();
         
-        Task<IEnumerable<BinanceTrader>> GetTraders(SearchLeaderboardRequest request);
+        Task<List<IBinanceTrader>> GrabbTraders(List<BinanceRequestTemplate> requests);
 
-        Task<IEnumerable<BinancePosition>> GetPositions(OtherPositionRequest request);
-
-        Task<IEnumerable<BinanceTopTrader>> GetTopTraders(SearchFeaturedTopTraderRequest request);
-
-        Task<IEnumerable<BinanceCurrency>> GetCurrencies();
-
-        Task<IEnumerable<BinancePosition>> GetPositionsSingle(OtherPositionRequest request);
+        Task<List<BinancePosition>> GrabbPositions(List<BinanceRequestTemplate> requests);
     }
 }

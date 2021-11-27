@@ -18,7 +18,6 @@ namespace BinanceStatistic.BinanceClient
         private const long TRIPPED = 1;
         public string UNAVAILABLE = "Unavailable";
         public int maxConcurrentRequests = 10;
-        private const string ENDPOINT = "/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
 
         public BinanceHttpClient()
         {
@@ -85,29 +84,25 @@ namespace BinanceStatistic.BinanceClient
             }
         }
         
-        public async Task<string> SendMultiPostRequests2(BinanceRequestTemplate request)
+        public async Task<HttpResponseMessage> SendMultiPostRequests2(BinanceRequestTemplate request)
         {
             try
             {
                 await semaphore.WaitAsync();
-
-                if (IsTripped())
-                {
-                    return UNAVAILABLE;
-                }
+                
+                // if (IsTripped())
+                // {
+                //     return UNAVAILABLE;
+                // }
                 
                 HttpResponseMessage httpResponseMessage = await HttpClient.PostAsync(request.Endpoint, request.Content);
-                
-                // TODO: try remove serialize process out of ddos process
-                string response = CheckResponseForError(httpResponseMessage);
-
-                return response;
+                return httpResponseMessage;
             }
             catch (Exception ex) when (ex is OperationCanceledException || ex is TaskCanceledException)
             {
                 Console.WriteLine("Timed out");
                 TripCircuit(reason: $"Timed out");
-                return UNAVAILABLE;
+                return null;
             }
             finally
             {

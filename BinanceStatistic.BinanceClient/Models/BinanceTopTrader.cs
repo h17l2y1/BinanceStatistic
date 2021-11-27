@@ -8,7 +8,7 @@ namespace BinanceStatistic.BinanceClient.Models
         public string FutureUid { get; set; }
         public string NickName { get; set; }
         public string UserPhotoUrl { get; set; }
-        public int Rank { get; set; }
+        public int? Rank { get; set; }
         public decimal Value { get; set; }
         public bool PositionShared { get; set; }
         public string TwitterUrl { get; set; }

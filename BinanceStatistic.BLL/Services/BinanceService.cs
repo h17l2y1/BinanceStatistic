@@ -42,7 +42,7 @@ namespace BinanceStatistic.BLL.Services
 
         public async Task CreatePositions()
         {
-            List<BinancePosition> binancePositions = await _grabberService.GetPositions();
+            List<BinancePosition> binancePositions = await _grabberService.GrabbAll();
             IEnumerable<Position> positions = await CreateStatistic(binancePositions);
             await _positionRepository.Create(positions);
         }

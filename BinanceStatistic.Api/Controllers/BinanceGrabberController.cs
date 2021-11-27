@@ -34,9 +34,9 @@ namespace BinanceStatistic.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GrabbTraders()
         {
-            await _service2.GetAllTraders();
+            await _service2.GrabbTraders();
             return Ok();
         }
-        
+
     }
 }

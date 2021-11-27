@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using BinanceStatistic.BinanceClient.Models;
 
@@ -7,6 +8,6 @@ namespace BinanceStatistic.BinanceClient.Interfaces
     {
         Task<string> SendMultiPostRequests<T>(string url, T request);
 
-        Task<string> SendMultiPostRequests2(BinanceRequestTemplate request);
+        Task<HttpResponseMessage> SendMultiPostRequests2(BinanceRequestTemplate request);
     }
 }
