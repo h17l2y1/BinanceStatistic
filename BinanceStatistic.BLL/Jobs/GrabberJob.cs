@@ -18,20 +18,19 @@ namespace BinanceStatistic.BLL.Jobs
         
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            if (DateTime.Now.Minute % 5 == 0)
-            {
-                
-            }
-            
             while (!cancellationToken.IsCancellationRequested)
             {
-                using (var scope = Services.CreateScope())
+                Console.WriteLine($"{DateTime.Now.Minute} % 5 = {DateTime.Now.Minute % 5}");
+                if (DateTime.Now.Minute % 5 == 0)
                 {
-                    var scopedProcessingService = scope.ServiceProvider.GetRequiredService<IBinanceGrabberService>();
-                    await scopedProcessingService.GrabbAll();
+                    using (var scope = Services.CreateScope())
+                    {
+                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<IBinanceGrabberService>();
+                        await scopedProcessingService.GrabbAll();
+                    }
                 }
-        
-                await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
+                
+                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
             }
         }
     }
