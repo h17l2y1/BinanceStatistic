@@ -84,15 +84,15 @@ namespace BinanceStatistic.BLL.Services
             //     }
             // }
             
-            // foreach (string sortType in Enum.GetNames(typeof(SortType)))
-            // {
-            //     foreach (string periodType in Enum.GetNames(typeof(AdditionalPeriodType)))
-            //     {
-            //         var requestData = new SearchLeaderboardRequest(sortType, periodType);
-            //         BinanceRequestTemplate template = CreateBinanceRequestTemplate(LeaderboardEndpoint, requestData);
-            //         requests.Add(template);
-            //     }
-            // }
+            foreach (string sortType in Enum.GetNames(typeof(SortType)))
+            {
+                foreach (string periodType in Enum.GetNames(typeof(AdditionalPeriodType)))
+                {
+                    var requestData = new SearchLeaderboardRequest(sortType, periodType);
+                    BinanceRequestTemplate template = CreateBinanceRequestTemplate(LeaderboardEndpoint, requestData);
+                    requests.Add(template);
+                }
+            }
             
             return requests;
         }
