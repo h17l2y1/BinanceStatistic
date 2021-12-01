@@ -9,6 +9,7 @@ using BinanceStatistic.BinanceClient.Models;
 using BinanceStatistic.BinanceClient.Models.Interfaces;
 using BinanceStatistic.BinanceClient.Views.Request;
 using BinanceStatistic.BLL.Services.Interface;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace BinanceStatistic.BLL.Services
@@ -19,10 +20,12 @@ namespace BinanceStatistic.BLL.Services
         private const string LeaderboardRankEndpoint = "/bapi/futures/v2/public/future/leaderboard/getLeaderboardRank";
         private const string OtherPositionEndpoint = "/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
         private readonly IBinanceClient _client;
+        private readonly ILogger<BinanceGrabberService> _logger;
 
-        public BinanceGrabberService(IBinanceClient client)
+        public BinanceGrabberService(IBinanceClient client, ILogger<BinanceGrabberService> logger)
         {
             _client = client;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<BinanceCurrency>> GrabbCurrencies()
@@ -33,25 +36,26 @@ namespace BinanceStatistic.BLL.Services
         
         public async Task<List<BinancePosition>> GrabbAll()
         {
-            List<BinanceRequestTemplate> tradersRequestTemplates = CreateRequestsForTraders();
-            List<IBinanceTrader> traders = await _client.GrabbTraders(tradersRequestTemplates);
-
-            List<BinanceRequestTemplate> positionRequestTemplates = CreateRequestsForPositions(traders);
-            List<BinancePosition> positions = await _client.GrabbPositions(positionRequestTemplates);
+            List<IBinanceTrader> traders = await GrabbTraders();
+            List<BinancePosition> positions = await GrabbPositions(traders);
             return positions;
         }
 
         public async Task<List<IBinanceTrader>> GrabbTraders()
         {
             List<BinanceRequestTemplate> tradersRequestTemplates = CreateRequestsForTraders();
+            _logger.LogDebug("Started GrabbTraders");
             List<IBinanceTrader> traders = await _client.GrabbTraders(tradersRequestTemplates);
+            _logger.LogDebug("Ended GrabbTraders - {0} grabbed", traders.Count);
             return traders;
         }
         
         public async Task<List<BinancePosition>> GrabbPositions(List<IBinanceTrader> traders)
         {
             List<BinanceRequestTemplate> positionTequestTemplates = CreateRequestsForPositions(traders);
+            _logger.LogDebug("Started GrabbPositions");
             List<BinancePosition> positions = await _client.GrabbPositions(positionTequestTemplates);
+            _logger.LogDebug("Ended GrabbPositions - {0} grabbed", positions.Count);
             return positions;
         }
         
@@ -80,15 +84,15 @@ namespace BinanceStatistic.BLL.Services
             //     }
             // }
             
-            foreach (string sortType in Enum.GetNames(typeof(SortType)))
-            {
-                foreach (string periodType in Enum.GetNames(typeof(AdditionalPeriodType)))
-                {
-                    var requestData = new SearchLeaderboardRequest(sortType, periodType);
-                    BinanceRequestTemplate template = CreateBinanceRequestTemplate(LeaderboardEndpoint, requestData);
-                    requests.Add(template);
-                }
-            }
+            // foreach (string sortType in Enum.GetNames(typeof(SortType)))
+            // {
+            //     foreach (string periodType in Enum.GetNames(typeof(AdditionalPeriodType)))
+            //     {
+            //         var requestData = new SearchLeaderboardRequest(sortType, periodType);
+            //         BinanceRequestTemplate template = CreateBinanceRequestTemplate(LeaderboardEndpoint, requestData);
+            //         requests.Add(template);
+            //     }
+            // }
             
             return requests;
         }

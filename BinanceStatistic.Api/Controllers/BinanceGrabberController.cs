@@ -8,33 +8,31 @@ namespace BinanceStatistic.Api.Controllers
     [Route("api/[controller]/[action]")]
     public class BinanceGrabberController : ControllerBase
     {
-        private readonly IBinanceService _service;
-        private readonly IBinanceGrabberService _service2;
+        private readonly IBinanceGrabberService _service;
 
-        public BinanceGrabberController(IBinanceService service, IBinanceGrabberService service2)
+        public BinanceGrabberController(IBinanceGrabberService service)
         {
             _service = service;
-            _service2 = service2;
         }
         
         [HttpGet]
-        public async Task<IActionResult> CreateAllCurrency()
+        public async Task<IActionResult> GrabbCurrencies()
         {
-            await _service.CreateCurrencies();
+            await _service.GrabbCurrencies();
             return Ok();
         }
         
         [HttpGet]
-        public async Task<IActionResult> CreatePositions()
+        public async Task<IActionResult> GrabbAll()
         {
-            await _service.CreatePositions();
+            await _service.GrabbAll();
             return Ok();
         }
         
         [HttpGet]
         public async Task<IActionResult> GrabbTraders()
         {
-            await _service2.GrabbTraders();
+            await _service.GrabbTraders();
             return Ok();
         }
 
