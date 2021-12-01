@@ -23,22 +23,22 @@ namespace BinanceStatistic.Api
             services.AddControllers();
             services.InjectBusinessLogicDependency(Configuration);
 
-            // services.AddSwaggerGen(c =>
-            // {
-            //     c.SwaggerDoc("v1", new OpenApiInfo {Title = "BinanceStatistic.Api", Version = "v1"});
-            // });
-        }
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "BinanceStatistic.Api", Version = "v1" });
+			});
+		}
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // if (env.IsDevelopment())
-            // {
-            //     app.UseDeveloperExceptionPage();
-            //     app.UseSwagger();
-            //     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BinanceStatistic.Api v1"));
-            // }
+			//if (env.IsDevelopment())
+			//{
+				app.UseDeveloperExceptionPage();
+				app.UseSwagger();
+				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BinanceStatistic.Api v1"));
+			//}
 
-            app.UseHttpsRedirection();
+			app.UseHttpsRedirection();
 
             app.UseRouting();
 

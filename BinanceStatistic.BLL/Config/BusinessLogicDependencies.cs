@@ -17,7 +17,7 @@ namespace BinanceStatistic.BLL.Config
             services.AddScoped<IBinanceService, BinanceService>();
             services.AddScoped<IBinanceGrabberService, BinanceGrabberService>();
             
-            services.AddHostedService<GrabberJob>();
+            // services.AddHostedService<GrabberJob>();
         }
     }
 }

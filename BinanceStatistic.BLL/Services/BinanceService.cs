@@ -12,6 +12,7 @@ using BinanceStatistic.BinanceClient.Views.Request;
 using BinanceStatistic.BLL.ViewModels;
 using BinanceStatistic.DAL.Entities;
 using BinanceStatistic.DAL.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BinanceStatistic.BLL.Services
 {
@@ -22,15 +23,17 @@ namespace BinanceStatistic.BLL.Services
         private readonly ICurrencyRepository _currencyRepository;
         private readonly IPositionRepository _positionRepository;
         private readonly IBinanceGrabberService _grabberService;
+        private readonly ILogger<BinanceService> _logger;
 
         public BinanceService(IBinanceClient client, IMapper mapper, ICurrencyRepository currencyRepository,
-            IPositionRepository positionRepository, IBinanceGrabberService grabberService)
+            IPositionRepository positionRepository, IBinanceGrabberService grabberService, ILogger<BinanceService> logger)
         {
             _client = client;
             _mapper = mapper;
             _currencyRepository = currencyRepository;
             _positionRepository = positionRepository;
             _grabberService = grabberService;
+            _logger = logger;
         }
 
         public async Task CreateCurrencies()
@@ -44,6 +47,7 @@ namespace BinanceStatistic.BLL.Services
         {
             List<BinancePosition> binancePositions = await _grabberService.GrabbAll();
             IEnumerable<Position> positions = await CreateStatistic(binancePositions);
+            _logger.LogDebug("Ended CreateStatistic - {0} added to db", positions.Count());
             await _positionRepository.Create(positions);
         }
 

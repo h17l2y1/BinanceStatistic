@@ -1,6 +1,7 @@
 using BinanceStatistic.DAL.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace BinanceStatistic.BLL.Config
 {
@@ -10,6 +11,7 @@ namespace BinanceStatistic.BLL.Config
         {
             AutoMapper.Add(services);
             BusinessLogicDependencies.Add(services);
+            SerilogLogger.Add(services, configuration);
             services.InjectDataAccessDependency(configuration);
         }
     }

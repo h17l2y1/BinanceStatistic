@@ -20,7 +20,6 @@ namespace BinanceStatistic.BLL.Jobs
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                Console.WriteLine($"{DateTime.Now.Minute} % 5 = {DateTime.Now.Minute % 5}");
                 if (DateTime.Now.Minute % 5 == 0)
                 {
                     using (var scope = Services.CreateScope())
