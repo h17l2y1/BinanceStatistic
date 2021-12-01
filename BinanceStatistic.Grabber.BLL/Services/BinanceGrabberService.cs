@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,13 @@ using BinanceStatistic.BinanceClient.Interfaces;
 using BinanceStatistic.BinanceClient.Models;
 using BinanceStatistic.BinanceClient.Models.Interfaces;
 using BinanceStatistic.BinanceClient.Views.Request;
-using BinanceStatistic.BLL.Services.Interface;
+using BinanceStatistic.DAL.Entities;
+using BinanceStatistic.DAL.Repositories.Interfaces;
+using BinanceStatistic.Grabber.BLL.Services.Interface;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace BinanceStatistic.BLL.Services
+namespace BinanceStatistic.Grabber.BLL.Services
 {
     public class BinanceGrabberService : IBinanceGrabberService
     {
@@ -21,11 +24,16 @@ namespace BinanceStatistic.BLL.Services
         private const string OtherPositionEndpoint = "/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
         private readonly IBinanceClient _client;
         private readonly ILogger<BinanceGrabberService> _logger;
+        private readonly ICurrencyRepository _currencyRepository;
+        private readonly IStatisticRepository _statisticRepository;
 
-        public BinanceGrabberService(IBinanceClient client, ILogger<BinanceGrabberService> logger)
+        public BinanceGrabberService(IBinanceClient client, ILogger<BinanceGrabberService> logger, 
+            ICurrencyRepository currencyRepository, IStatisticRepository statisticRepository)
         {
             _client = client;
             _logger = logger;
+            _currencyRepository = currencyRepository;
+            _statisticRepository = statisticRepository;
         }
 
         public async Task<IEnumerable<BinanceCurrency>> GrabbCurrencies()
@@ -34,11 +42,45 @@ namespace BinanceStatistic.BLL.Services
             return binanceCurrencies;
         }
         
+        public async Task CreateStatistic()
+        {
+            List<BinancePosition> binancePositions = await GrabbAll();
+            IEnumerable<Statistic> statistics = await CreateStatistic(binancePositions);
+            await _statisticRepository.Create(statistics);
+        }
+        
         public async Task<List<BinancePosition>> GrabbAll()
         {
             List<IBinanceTrader> traders = await GrabbTraders();
             List<BinancePosition> positions = await GrabbPositions(traders);
             return positions;
+        }
+
+        public async Task<IEnumerable<Statistic>> CreateStatistic(IEnumerable<BinancePosition> positions)
+        {
+            List<Currency> currencies = await _currencyRepository.GetAll();
+
+            IEnumerable<Statistic> groupedPositions = positions
+                .Where(w => w.FormattedUpdateTime.Day == DateTime.Now.Day)
+                .GroupBy(g => g.Symbol)
+                .Select(s =>
+                {
+                    int longPos = s.Count(c => c.Amount > 0);
+                    int shortPos = s.Count(c => c.Amount < 0);
+                    int totalPos = s.Count();
+
+                    return new Statistic
+                    {
+                        CurrencyId = currencies.FirstOrDefault(prop => prop.Name == s.Key)?.Id,
+                        Count = totalPos,
+                        Short = shortPos,
+                        Long = longPos,
+                        Amount = s.Sum(f => f.Amount)
+                    };
+                })
+                .Where(w => w.Count > 0);
+
+            return groupedPositions;
         }
 
         public async Task<List<IBinanceTrader>> GrabbTraders()

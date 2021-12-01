@@ -1,6 +1,6 @@
 namespace BinanceStatistic.DAL.Entities
 {
-    public class Position : BaseEntity
+    public class Statistic : BaseEntity
     {
         public string CurrencyId { get; set; }
         public int Count { get; set; }

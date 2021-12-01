@@ -9,13 +9,7 @@ namespace BinanceStatistic.BLL.Services.Interface
     public interface IBinanceService
     {
         Task<GetStatisticResponse> GetPositions();
-
-        Task CreateCurrencies();
-
-        Task<IEnumerable<Position>> CreateStatistic(IEnumerable<BinancePosition> positions);
-
-        Task CreatePositions();
-
+        
         Task<GetStatisticResponse> GetPositionsWithInterval(int interval);
     }
 }

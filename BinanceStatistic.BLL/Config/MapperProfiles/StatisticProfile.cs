@@ -8,7 +8,7 @@ namespace BinanceStatistic.BLL.Config.MapperProfiles
     {
         public StatisticProfile()
         {
-            CreateMap<Position, PositionView>()
+            CreateMap<Statistic, PositionView>()
                 .ForMember(to => to.Currency, from => from.MapFrom(source => source.Currency.Name));
         }
     }

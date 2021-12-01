@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using BinanceStatistic.BLL.Services.Interface;
+using BinanceStatistic.Grabber.BLL.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BinanceStatistic.Api.Controllers
+namespace BinanceStatistic.Grabber.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

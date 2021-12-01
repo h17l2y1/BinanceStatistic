@@ -2,10 +2,20 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <UserSecretsId>1e2c4af4-db8e-417e-82f0-4caabc8ae8ba</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BinanceStatistic.Grabber.BLL\BinanceStatistic.Grabber.BLL.csproj" />
     </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ namespace BinanceStatistic.DAL.Config
         {
         }
 		
-        public DbSet<Position> Positions { get; set; }
+        public DbSet<Statistic> Statistics { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Subscribe> Subscribes { get; set; }

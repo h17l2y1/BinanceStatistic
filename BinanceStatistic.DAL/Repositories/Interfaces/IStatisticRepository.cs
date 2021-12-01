@@ -5,9 +5,9 @@ using BinanceStatistic.DAL.Entities;
 
 namespace BinanceStatistic.DAL.Repositories.Interfaces
 {
-    public interface IPositionRepository: IBaseRepository<Position>
+    public interface IStatisticRepository: IBaseRepository<Statistic>
     {
-        Task<List<Position>> GetWithInterval(DateTime lastUpdate, int interval);
+        Task<List<Statistic>> GetWithInterval(DateTime lastUpdate, int interval);
 
         Task<DateTime> GetLastUpdate();
     }

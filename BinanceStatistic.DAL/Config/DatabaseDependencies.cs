@@ -8,7 +8,7 @@ namespace BinanceStatistic.DAL.Config
     {
         public static void Add(IServiceCollection services)
         {
-            services.AddTransient<IPositionRepository, PositionRepository>();
+            services.AddTransient<IStatisticRepository, StatisticRepository>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ISubscribeRepository, SubscribeRepository>();

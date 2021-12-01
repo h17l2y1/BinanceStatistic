@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BinanceStatistic.BLL.Services.Interface;
+using BinanceStatistic.Grabber.BLL.Services.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BinanceStatistic.BLL.Jobs
+namespace BinanceStatistic.Grabber.BLL.Jobs
 {
     public class GrabberJob : BackgroundService
     {
@@ -25,7 +25,7 @@ namespace BinanceStatistic.BLL.Jobs
                     using (var scope = Services.CreateScope())
                     {
                         var scopedProcessingService = scope.ServiceProvider.GetRequiredService<IBinanceGrabberService>();
-                        await scopedProcessingService.GrabbAll();
+                        await scopedProcessingService.CreateStatistic();
                     }
                 }
                 

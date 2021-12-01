@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using BinanceStatistic.BinanceClient.Models;
 using BinanceStatistic.BinanceClient.Models.Interfaces;
 
-namespace BinanceStatistic.BLL.Services.Interface
+namespace BinanceStatistic.Grabber.BLL.Services.Interface
 {
     public interface IBinanceGrabberService
     {
+        Task CreateStatistic();
+        
         Task<IEnumerable<BinanceCurrency>> GrabbCurrencies();
         
         Task<List<BinancePosition>> GrabbAll();
