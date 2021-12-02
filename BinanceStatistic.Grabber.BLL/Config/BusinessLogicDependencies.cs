@@ -1,11 +1,11 @@
-using BinanceStatistic.BLL.Services;
-using BinanceStatistic.BLL.Services.Interface;
 using BinanceStatistic.BinanceClient;
 using BinanceStatistic.BinanceClient.Interfaces;
-// using BinanceStatistic.BLL.Jobs;
+using BinanceStatistic.Grabber.BLL.Jobs;
+using BinanceStatistic.Grabber.BLL.Services;
+using BinanceStatistic.Grabber.BLL.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BinanceStatistic.BLL.Config
+namespace BinanceStatistic.Grabber.BLL.Config
 {
     public static class BusinessLogicDependencies
     {
@@ -14,10 +14,9 @@ namespace BinanceStatistic.BLL.Config
             services.AddScoped<IBinanceHttpClient, BinanceHttpClient>();
             services.AddScoped<IRequestSender, RequestSender>();
             services.AddScoped<IBinanceClient, Client>();
-            services.AddScoped<IBinanceService, BinanceService>();
             services.AddScoped<IBinanceGrabberService, BinanceGrabberService>();
             
-            // services.AddHostedService<GrabberJob>();
+            services.AddHostedService<GrabberJob>();
         }
     }
 }
