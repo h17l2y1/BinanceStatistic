@@ -11,7 +11,7 @@ namespace BinanceStatistic.BinanceClient.Views.Response
     
     public class BinancePositionModel
     {
-        public IEnumerable<BinancePosition> OtherPositionRetList { get; set; }
+        public List<BinancePosition> OtherPositionRetList { get; set; }
         public IEnumerable<int> UpdateTime { get; set; }
         // public long UpdateTimeStamp { get; set; }
     }

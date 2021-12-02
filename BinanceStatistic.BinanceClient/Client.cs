@@ -64,13 +64,23 @@ namespace BinanceStatistic.BinanceClient
             {
                 string responseJson = httpResponseMessage.Content.ReadAsStringAsync().Result;
                 OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(responseJson, _options);
-                IEnumerable<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
+                List<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
                 if (positions != null)
                 {
+                    // Create DateTime form int[]
+                    positions.ForEach(position => position.FormattedUpdateTime = new DateTime(
+                        position.UpdateTime[0],
+                        position.UpdateTime[1],
+                        position.UpdateTime[2],
+                        position.UpdateTime[3],
+                        position.UpdateTime[4],
+                        position.UpdateTime[5]
+                    ));
+                    
                     totalPositions.AddRange(positions);
                 }
             }
-            
+
             return totalPositions;
         }
 

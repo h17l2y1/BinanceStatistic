@@ -16,19 +16,23 @@ namespace BinanceStatistic.Telegram.BLL.Services
         private readonly ITelegramBotClient _telegramClient;
         private readonly IUserRepository _userRepository;
         private readonly ISubscribeHelper _subscribeHelper;
+        private readonly ISenderService _senderService;
         private IEnumerable<ICommand> _commands;
 
         public TelegramBotService(ITelegramBotClient telegramClient, IUserRepository userRepository,
-            ISubscribeHelper subscribeHelper)
+            ISubscribeHelper subscribeHelper, ISenderService senderService)
         {
             _telegramClient = telegramClient;
             _userRepository = userRepository;
             _subscribeHelper = subscribeHelper;
+            _senderService = senderService;
             InitCommands();
         }
 
         public async Task<WebhookInfo> GetHookInfo()
         {
+            await _senderService.Test5();
+            
             WebhookInfo info = await _telegramClient.GetWebhookInfoAsync();
             return info;
         }
@@ -38,7 +42,7 @@ namespace BinanceStatistic.Telegram.BLL.Services
             if (update.Type == UpdateType.Message && update.Message?.Text != null ||
                 update.Type == UpdateType.CallbackQuery && update.CallbackQuery?.Data != null)
             {
-                string text = update.Type == UpdateType.Message ? update.Message.Text : update.CallbackQuery.Data;
+                string text = update.Type == UpdateType.Message ? update.Message?.Text : update.CallbackQuery?.Data;
                 
                 foreach (ICommand command in _commands)
                 {
@@ -61,6 +65,7 @@ namespace BinanceStatistic.Telegram.BLL.Services
                 new MainMenuCommand(),
                 new SubscribeCommand(_userRepository),
                 new CreateSubscribeCommand(_subscribeHelper),
+                new AboutCommand(),
             };
         }
     }

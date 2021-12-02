@@ -7,9 +7,9 @@ namespace BinanceStatistic.Telegram.BLL.Constants
             public partial class Keyboard
             {
                 public const string Start = "/start";
-                public const string Subscribe = "Subscribe";
-                public const string ToMenu = "To menu";
-                public const string About = "About";
+                public const string Subscribe = "Подписки";
+                public const string ToMenu = "В меню";
+                public const string About = "О боте";
             }
         }
     }

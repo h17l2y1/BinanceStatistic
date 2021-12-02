@@ -54,6 +54,7 @@ namespace BinanceStatistic.Telegram.BLL.Commands
                 FirstName = update.Message.From.FirstName,
                 UserName = update.Message.From.Username,
                 Language = update.Message.From.LanguageCode,
+                ChatId = update.Message.Chat.Id,
             };
 
             User dbUser = await _userRepository.FindUserByTelegramId(user.TelegramId);

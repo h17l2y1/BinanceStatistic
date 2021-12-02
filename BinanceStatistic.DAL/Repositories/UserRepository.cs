@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BinanceStatistic.DAL.Config;
 using BinanceStatistic.DAL.Entities;
@@ -23,5 +25,6 @@ namespace BinanceStatistic.DAL.Repositories
                                 .ThenInclude(ti=>ti.Subscribe)
                                .SingleOrDefaultAsync(s => s.TelegramId == telegramId);
         }
+        
     }
 }

@@ -10,13 +10,19 @@ namespace BinanceStatistic.Telegram.BLL.Commands
         protected InlineKeyboardMarkup GetMenuInline(ICollection<UserSubscribe> userSubscribes)
         {
             var menu = new InlineKeyboardMarkup(
-                new InlineKeyboardButton[]
+                new InlineKeyboardButton[][]
                 {
-                    GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN5),
-                    GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN15),
-                    GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN30),
-                    GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN60)
-                }
+                    new InlineKeyboardButton[]
+                    {
+                        GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN5),
+                        GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN15)
+                    },
+                    new InlineKeyboardButton[]
+                    {
+                        GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN30),
+                        GetInlineNameWithEmoji(userSubscribes, Constants.Constants.Button.Inline.MIN60)
+                    }
+               }
             );
             return menu;
         }

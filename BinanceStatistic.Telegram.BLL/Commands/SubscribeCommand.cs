@@ -4,7 +4,6 @@ using BinanceStatistic.Telegram.BLL.Commands.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 using User = BinanceStatistic.DAL.Entities.User;
 
 namespace BinanceStatistic.Telegram.BLL.Commands
@@ -26,17 +25,21 @@ namespace BinanceStatistic.Telegram.BLL.Commands
         public async Task Execute(Update update, ITelegramBotClient client)
         {
             User user = await _userRepository.GetUserWithSubscriptions(update.Message.From.Id);
-            
-            await client.SendTextMessageAsync(update.Message.Chat.Id,
-                Constants.Constants.Message.AboutSubscribe,
-                ParseMode.MarkdownV2,
-                null,
-                true,
-                true,
-                null,
-                null,
-                GetMenuInline(user.UserSubscribes)
-            );
+
+            if (user != null)
+            {
+                await client.SendTextMessageAsync(update.Message.Chat.Id,
+                    Constants.Constants.Message.AboutSubscribe,
+                    ParseMode.MarkdownV2,
+                    null,
+                    true,
+                    true,
+                    null,
+                    null,
+                    GetMenuInline(user.UserSubscribes)
+                );
+            }
+
         }
     }
 }

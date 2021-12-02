@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BinanceStatistic.DAL.Entities;
 using BinanceStatistic.Telegram.BLL.Commands.Interfaces;
 using BinanceStatistic.Telegram.BLL.Helpers.Interfaces;
 using BinanceStatistic.Telegram.BLL.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BinanceStatistic.Telegram.BLL.Commands
 {
@@ -31,14 +29,25 @@ namespace BinanceStatistic.Telegram.BLL.Commands
         
         public bool Contains(string command)
         {
-            return _minutes.FirstOrDefault(f => f.Contains(command.Remove(command.Length-2).Trim())) != null;
+            bool isContain = _minutes.FirstOrDefault(f =>
+            {
+                var text = command.Remove(command.Length - 2).Trim();
+                if (text != "")
+                {
+                    return f.Contains(text);
+                }
+                return false;
+            }) != null;
+            return isContain;
         }
 
         public async Task Execute(Update update, ITelegramBotClient client)
         {
             Test test = await _subscribeHelper.CreateOrRemoveSubscribe(update.CallbackQuery.From.Id, update.CallbackQuery?.Data);
-            string createOrRemoveOutputMessage = test.IsCreated ? $"You subscribed ✅ to the {update.CallbackQuery?.Data} newsletter" :
-                                                                  $"You unsubscribed 🚫 from {update.CallbackQuery?.Data} newsletter";
+            string buttonName = update.CallbackQuery?.Data.Remove((int)update.CallbackQuery?.Data.Length - 2).Trim();
+            string createOrRemoveOutputMessage = test.IsCreated ? 
+                                                                    $"Вы подписались на {buttonName}" :
+                                                                    $"Вы отписались от {buttonName}";
 
             await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id,
                 createOrRemoveOutputMessage,
