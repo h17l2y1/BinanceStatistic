@@ -26,7 +26,13 @@ namespace BinanceStatistic.Telegram.BLL.Services
             _subscribeHelper = subscribeHelper;
             InitCommands();
         }
-        
+
+        public async Task<WebhookInfo> GetHookInfo()
+        {
+            WebhookInfo info = await _telegramClient.GetWebhookInfoAsync();
+            return info;
+        }
+
         public async Task Update(Update update)
         {
             if (update.Type == UpdateType.Message && update.Message?.Text != null ||
