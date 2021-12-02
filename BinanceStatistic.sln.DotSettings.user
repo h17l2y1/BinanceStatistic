@@ -2,15 +2,15 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/Users/new/.nuget/packages/automapper/10.1.1/lib/netstandard2.0/AutoMapper.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=187d052c_002Df2f6_002D4026_002Dbacd_002Db632a49df16a_0023BinanceStatistic_002ETelegram_002EApi/@EntryIndexedValue">True</s:Boolean>
-	
-	
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=55065ea8_002Dcca7_002D4b50_002Dac5a_002Dfa732e32a404_0023BinanceStatistic_002EGrabber_002EApi/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=b0367377_002D77c8_002D4d13_002Da40a_002Da14a23664091_0023BinanceStatistic_002EGrabber_002EBLL/@EntryIndexedValue">True</s:Boolean>
 	
 	
 	
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=ea9d505a_002D9c18_002D4f6f_002D8c24_002D81c974a3a5ac_0023BinanceStatistic_002ETelegram_002EBLL/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
+	
+	
+	
 	
 	
 	

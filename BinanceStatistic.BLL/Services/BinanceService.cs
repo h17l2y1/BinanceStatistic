@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BinanceStatistic.BLL.Services.Interface;
-using BinanceStatistic.BinanceClient.Enums;
-using BinanceStatistic.BinanceClient.Interfaces;
-using BinanceStatistic.BinanceClient.Models;
-using BinanceStatistic.BinanceClient.Views.Request;
 using BinanceStatistic.BLL.ViewModels;
 using BinanceStatistic.DAL.Entities;
 using BinanceStatistic.DAL.Repositories.Interfaces;
@@ -18,77 +13,26 @@ namespace BinanceStatistic.BLL.Services
 {
     public class BinanceService : IBinanceService
     {
-        private readonly IBinanceClient _client;
         private readonly IMapper _mapper;
-        private readonly ICurrencyRepository _currencyRepository;
         private readonly IPositionRepository _positionRepository;
-        private readonly IBinanceGrabberService _grabberService;
         private readonly ILogger<BinanceService> _logger;
 
-        public BinanceService(IBinanceClient client, IMapper mapper, ICurrencyRepository currencyRepository,
-            IPositionRepository positionRepository, IBinanceGrabberService grabberService, ILogger<BinanceService> logger)
+        public BinanceService(IMapper mapper,
+            IPositionRepository positionRepository, ILogger<BinanceService> logger)
         {
-            _client = client;
             _mapper = mapper;
-            _currencyRepository = currencyRepository;
             _positionRepository = positionRepository;
-            _grabberService = grabberService;
             _logger = logger;
-        }
-
-        public async Task CreateCurrencies()
-        {
-            IEnumerable<BinanceCurrency> binanceCurrencies = await _grabberService.GrabbCurrencies();;
-            var currencies = _mapper.Map<IEnumerable<Currency>>(binanceCurrencies);
-            await _currencyRepository.Create(currencies);
-        }
-
-        public async Task CreatePositions()
-        {
-            List<BinancePosition> binancePositions = await _grabberService.GrabbAll();
-            IEnumerable<Position> positions = await CreateStatistic(binancePositions);
-            _logger.LogDebug("Ended CreateStatistic - {0} added to db", positions.Count());
-            await _positionRepository.Create(positions);
         }
 
         public async Task<GetStatisticResponse> GetPositions()
         {
-            List<Position> positions = await _positionRepository.GetAll();
-            List<PositionView> statisticResponse = _mapper.Map<List<PositionView>>(positions);
+            IEnumerable<Position> positions = await _positionRepository.GetAll();
+            IEnumerable<PositionView> statisticResponse = _mapper.Map<IEnumerable<PositionView>>(positions);
             var response = new GetStatisticResponse(statisticResponse);
             return response;
         }
-
-        public async Task<IEnumerable<Position>> CreateStatistic(IEnumerable<BinancePosition> positions)
-        {
-            List<Currency> currencies = await _currencyRepository.GetAll();
-
-            // for temporary filter
-            DateTime someDay = new DateTime(2021, 11, 24);
-
-            IEnumerable<Position> groupedPositions = positions
-                .Where(w => w.FormattedUpdateTime.Day == someDay.Day)
-                .GroupBy(g => g.Symbol)
-                .Select(s =>
-                {
-                    int longPos = s.Count(c => c.Amount > 0);
-                    int shortPos = s.Count(c => c.Amount < 0);
-                    int totalPos = s.Count();
-
-                    return new Position
-                    {
-                        CurrencyId = currencies.FirstOrDefault(prop => prop.Name == s.Key)?.Id,
-                        Count = totalPos,
-                        Short = shortPos,
-                        Long = longPos,
-                        Amount = s.Sum(f => f.Amount)
-                    };
-                })
-                .Where(w => w.Count > 0);
-
-            return groupedPositions;
-        }
-
+        
         public async Task<GetStatisticResponse> GetPositionsWithInterval(int interval)
         {
             DateTime lastUpdate = await _positionRepository.GetLastUpdate();

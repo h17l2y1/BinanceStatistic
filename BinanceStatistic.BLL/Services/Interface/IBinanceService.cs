@@ -1,20 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using BinanceStatistic.BinanceClient.Models;
+﻿using System.Threading.Tasks;
 using BinanceStatistic.BLL.ViewModels;
-using BinanceStatistic.DAL.Entities;
 
 namespace BinanceStatistic.BLL.Services.Interface
 {
     public interface IBinanceService
     {
         Task<GetStatisticResponse> GetPositions();
-
-        Task CreateCurrencies();
-
-        Task<IEnumerable<Position>> CreateStatistic(IEnumerable<BinancePosition> positions);
-
-        Task CreatePositions();
 
         Task<GetStatisticResponse> GetPositionsWithInterval(int interval);
     }
