@@ -3,7 +3,9 @@
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="BinanceStatistic" expanded="True" selected="True" />
+          <Node name="BinanceStatistic" expanded="True">
+            <Node name="BinanceStatistic.Telegram.Api" selected="True" />
+          </Node>
         </State>
       </Pad>
     </Pads>

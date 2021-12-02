@@ -28,10 +28,10 @@ namespace BinanceStatistic.DAL.Config
                 .Build();
             
             string connectionString = configuration.GetConnectionString("DefaultConnection");
-
+    
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
             optionsBuilder.UseSqlServer(connectionString);
-
+    
             return new ApplicationContext(optionsBuilder.Options);
         }
     }

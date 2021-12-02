@@ -10,9 +10,10 @@ namespace BinanceStatistic.Telegram.BLL.Config
         {
             string webHook = configuration["WebHook"];
             string telegramEndpoint = configuration["BotEndpoint"];
+            string token = configuration["Token"];
             string telegramWebHook = $"{webHook}{telegramEndpoint}";
             
-            ITelegramBotClient telegramClient = new TelegramBotClient(configuration["Token"]);
+            ITelegramBotClient telegramClient = new TelegramBotClient(token);
             telegramClient.SetWebhookAsync(telegramWebHook);
             services.AddSingleton(telegramClient);
         }

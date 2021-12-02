@@ -11,6 +11,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
             AutoMapper.Add(services);
             BusinessLogicDependencies.Add(services);
             TelegramBot.Add(services, configuration);
+            SerilogLogger.Add(services, configuration);
             services.InjectDataAccessDependency(configuration);
         }
     }
