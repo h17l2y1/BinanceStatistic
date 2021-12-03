@@ -35,7 +35,7 @@ namespace BinanceStatistic.BinanceClient
         public async Task<List<IBinanceTrader>> GrabbTraders(List<BinanceRequestTemplate> requests)
         {
             var binanceTraders = new List<IBinanceTrader>();
-            List<HttpResponseMessage> responses = await Grabber(requests, "Traders");
+            List<HttpResponseMessage> responses = await Grabber(requests, "Request for traders");
             
             foreach (var httpResponseMessage in responses)
             {
@@ -57,7 +57,7 @@ namespace BinanceStatistic.BinanceClient
 
         public async Task<List<BinancePosition>> GrabbPositions(List<BinanceRequestTemplate> requests)
         {
-            List<HttpResponseMessage> responses = await Grabber(requests, "Positions");
+            List<HttpResponseMessage> responses = await Grabber(requests, "Traders");
             var totalPositions = new List<BinancePosition>();
             
             foreach (var httpResponseMessage in responses)
@@ -67,15 +67,22 @@ namespace BinanceStatistic.BinanceClient
                 List<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
                 if (positions != null)
                 {
+                    // TODO: Fix time
                     // Create DateTime form int[]
-                    positions.ForEach(position => position.FormattedUpdateTime = new DateTime(
-                        position.UpdateTime[0],
-                        position.UpdateTime[1],
-                        position.UpdateTime[2],
-                        position.UpdateTime[3],
-                        position.UpdateTime[4],
-                        position.UpdateTime[5]
-                    ));
+                    // foreach (var position in positions)
+                    // {
+                    //     if (position.UpdateTime.Count == 6)
+                    //     {
+                    //         position.FormattedUpdateTime = new DateTime(
+                    //             position.UpdateTime[0],
+                    //             position.UpdateTime[1],
+                    //             position.UpdateTime[2],
+                    //             position.UpdateTime[3],
+                    //             position.UpdateTime[4],
+                    //             position.UpdateTime[5]
+                    //         );
+                    //     }
+                    // }
                     
                     totalPositions.AddRange(positions);
                 }
@@ -91,7 +98,6 @@ namespace BinanceStatistic.BinanceClient
             int now = 1;
 
             requests.AsParallel()
-                .AsOrdered()
                 .WithMergeOptions(ParallelMergeOptions.NotBuffered)
                 .Select(request =>
                 {

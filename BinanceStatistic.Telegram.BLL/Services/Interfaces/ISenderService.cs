@@ -4,6 +4,6 @@ namespace BinanceStatistic.Telegram.BLL.Services.Interfaces
 {
     public interface ISenderService
     {
-        Task Test5();
+        Task SendMessageToUsers();
     }
 }

@@ -46,15 +46,15 @@ namespace BinanceStatistic.BLL.Services
 
                     var position = new PositionView();
                     position.Currency = positions[0].Currency.Name;
-
-                    position.Long = positions.Length == 2 ? GetDiff(positions[0].Long, positions[1].Long) : 0;
-                    position.Short = positions.Length == 2 ? GetDiff(positions[0].Short, positions[1].Short) : 0;
-                    position.Count = positions.Length == 2 ? GetDiff(positions[0].Count, positions[1].Count) : 0;
-
-                    position.LongWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Long} Now {positions[1].Long} Diff {GetDiff(positions[0].Long, positions[1].Long)}" : "0";
-                    position.ShortWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Short} Now {positions[1].Short} Diff {GetDiff(positions[0].Short, positions[1].Short)}" : "0";
-                    position.CountWasNowDiff = positions.Length == 2 ? $"Was: {positions[0].Count} Now {positions[1].Count} Diff {GetDiff(positions[0].Count, positions[1].Count)}" : "0";
-
+                    
+                    position.Long = positions.Length == 2 ? positions[1].Long : positions[0].Long;
+                    position.Short = positions.Length == 2 ? positions[1].Short : positions[0].Short;
+                    position.Count = positions.Length == 2 ? positions[1].Count : positions[0].Count;
+                    
+                    position.LongDiff = positions.Length == 2 ? GetDiff(positions[0].Long, positions[1].Long) : 0;
+                    position.ShortDiff = positions.Length == 2 ? GetDiff(positions[0].Short, positions[1].Short) : 0;
+                    position.CountDiff = positions.Length == 2 ? GetDiff(positions[0].Count, positions[1].Count) : 0;
+                    
                     return position;
                 })
                 .ToList();

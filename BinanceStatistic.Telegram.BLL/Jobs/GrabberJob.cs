@@ -25,7 +25,7 @@ namespace BinanceStatistic.Telegram.BLL.Jobs
                     using (var scope = Services.CreateScope())
                     {
                         var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
-                        await scopedProcessingService.Test5();
+                        await scopedProcessingService.SendMessageToUsers();
                     }
                 }
 

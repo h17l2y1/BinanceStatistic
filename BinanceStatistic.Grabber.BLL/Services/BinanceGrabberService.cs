@@ -77,13 +77,19 @@ public class BinanceGrabberService : IBinanceGrabberService
             List<Currency> currencies = await _currencyRepository.GetAll();
 
             List<Position> groupedPositions = positions
-                .Where(w => w.FormattedUpdateTime.Day == DateTime.Now.Day)
+                .Where(w => w.Yellow == true)
                 .GroupBy(g => g.Symbol)
                 .Select(s =>
                 {
                     int longPos = s.Count(c => c.Amount > 0);
                     int shortPos = s.Count(c => c.Amount < 0);
                     int totalPos = s.Count();
+
+                    var isCurrencyExist = currencies.FirstOrDefault(prop => prop.Name == s.Key)?.Id;
+                    if (isCurrencyExist == null)
+                    {
+                        return null;
+                    }
 
                     return new Position
                     {
