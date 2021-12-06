@@ -2,6 +2,10 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/Users/new/.nuget/packages/automapper/10.1.1/lib/netstandard2.0/AutoMapper.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=187d052c_002Df2f6_002D4026_002Dbacd_002Db632a49df16a_0023BinanceStatistic_002ETelegram_002EApi/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=497462a8_002D5538_002D4cba_002D89a0_002Ddc954b1568ba_0023BinanceStatistic_002EApi/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=70545af5_002Da862_002D4071_002D949a_002D635fc851d154_0023BinanceStatistic_002EBLL/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=ea9d505a_002D9c18_002D4f6f_002D8c24_002D81c974a3a5ac_0023BinanceStatistic_002ETelegram_002EBLL/@EntryIndexedValue">True</s:Boolean>
 	
 	
 	

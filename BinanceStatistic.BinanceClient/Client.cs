@@ -66,28 +66,32 @@ namespace BinanceStatistic.BinanceClient
             foreach (var httpResponseMessage in responses)
             {
                 string responseJson = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(responseJson, _options);
-                List<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
-                if (positions != null)
+                
+                if (!string.IsNullOrEmpty(responseJson))
                 {
-                    // TODO: Fix time
-                    // Create DateTime form int[]
-                    // foreach (var position in positions)
-                    // {
-                    //     if (position.UpdateTime.Count == 6)
-                    //     {
-                    //         position.FormattedUpdateTime = new DateTime(
-                    //             position.UpdateTime[0],
-                    //             position.UpdateTime[1],
-                    //             position.UpdateTime[2],
-                    //             position.UpdateTime[3],
-                    //             position.UpdateTime[4],
-                    //             position.UpdateTime[5]
-                    //         );
-                    //     }
-                    // }
+                    OtherPositionResponse responseModel = JsonSerializer.Deserialize<OtherPositionResponse>(responseJson, _options);
+                    List<BinancePosition> positions = responseModel?.Data.OtherPositionRetList;
+                    if (positions != null)
+                    {
+                        // TODO: Fix time
+                        // Create DateTime form int[]
+                        // foreach (var position in positions)
+                        // {
+                        //     if (position.UpdateTime.Count == 6)
+                        //     {
+                        //         position.FormattedUpdateTime = new DateTime(
+                        //             position.UpdateTime[0],
+                        //             position.UpdateTime[1],
+                        //             position.UpdateTime[2],
+                        //             position.UpdateTime[3],
+                        //             position.UpdateTime[4],
+                        //             position.UpdateTime[5]
+                        //         );
+                        //     }
+                        // }
                     
-                    totalPositions.AddRange(positions);
+                        totalPositions.AddRange(positions);
+                    }
                 }
             }
 

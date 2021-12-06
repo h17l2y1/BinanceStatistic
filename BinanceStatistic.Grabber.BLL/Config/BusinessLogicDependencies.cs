@@ -15,8 +15,7 @@ namespace BinanceStatistic.Grabber.BLL.Config
             services.AddScoped<IRequestSender, RequestSender>();
             services.AddScoped<IBinanceClient, Client>();
             services.AddScoped<IBinanceGrabberService, BinanceGrabberService>();
-            
-            services.AddHostedService<GrabberJob>();
+            services.AddTransient<GrabberJob>();
         }
     }
 }

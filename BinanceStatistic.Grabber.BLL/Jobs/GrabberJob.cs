@@ -1,39 +1,21 @@
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 using BinanceStatistic.Grabber.BLL.Services.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Quartz;
 
 namespace BinanceStatistic.Grabber.BLL.Jobs
 {
-    public class GrabberJob : BackgroundService
+    public class GrabberJob : IJob
     {
-        public IServiceProvider Services { get; }
+        private readonly IBinanceGrabberService _grabberService;
 
-        public GrabberJob(IServiceProvider services)
+        public GrabberJob(IBinanceGrabberService grabberService)
         {
-            Services = services;
+            _grabberService = grabberService;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+        public async Task Execute(IJobExecutionContext context)
         {
-            int time = 10;
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                if (DateTime.Now.Minute % 5 == 0)
-                {
-                    // time = 300;
-                    using (var scope = Services.CreateScope())
-                    {
-                        var scopedProcessingService =
-                            scope.ServiceProvider.GetRequiredService<IBinanceGrabberService>();
-                        await scopedProcessingService.CreateStatistic();
-                    }
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(time), cancellationToken);
-            }
+            await _grabberService.CreateStatistic();
         }
     }
 }

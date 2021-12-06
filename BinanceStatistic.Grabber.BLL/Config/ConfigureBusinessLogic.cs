@@ -11,6 +11,7 @@ namespace BinanceStatistic.Grabber.BLL.Config
             AutoMapper.Add(services);
             BusinessLogicDependencies.Add(services);
             SerilogLogger.Add(services, configuration);
+            QuartzJobs.Add(services);
             services.InjectDataAccessDependency(configuration);
         }
     }
