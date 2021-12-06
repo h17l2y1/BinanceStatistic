@@ -7,11 +7,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace BinanceStatistic.Telegram.BLL.Jobs
 {
-    public class GrabberJob : BackgroundService
+    public class SenderJob : BackgroundService
     {
         public IServiceProvider Services { get; }
 
-        public GrabberJob(IServiceProvider services)
+        public SenderJob(IServiceProvider services)
         {
             Services = services;
         }

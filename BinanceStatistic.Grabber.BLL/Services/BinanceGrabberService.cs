@@ -50,8 +50,12 @@ public class BinanceGrabberService : IBinanceGrabberService
         
         public async Task<IEnumerable<BinancePosition>> CreateStatistic()
         {
+            var startTime = DateTime.Now;
+            startTime = startTime.AddSeconds(-startTime.Second);
+            startTime = startTime.AddMilliseconds(-startTime.Millisecond);
+            
             List<BinancePosition> binancePositions = await GrabbAll();
-            List<Position> positions = await CreateStatistic(binancePositions);
+            List<Position> positions = await CreateStatistic(binancePositions, startTime);
             await _positionRepository.Create(positions);
             return binancePositions;
         }
@@ -72,7 +76,7 @@ public class BinanceGrabberService : IBinanceGrabberService
             return traders;
         }
         
-        private async Task<List<Position>> CreateStatistic(IEnumerable<BinancePosition> positions)
+        private async Task<List<Position>> CreateStatistic(IEnumerable<BinancePosition> positions, DateTime startTime)
         {
             List<Currency> currencies = await _currencyRepository.GetAll();
 
@@ -97,7 +101,8 @@ public class BinanceGrabberService : IBinanceGrabberService
                         Count = totalPos,
                         Short = shortPos,
                         Long = longPos,
-                        Amount = s.Sum(f => f.Amount)
+                        Amount = s.Sum(f => f.Amount),
+                        CreationDate = startTime
                     };
                 })
                 .Where(w => w.Count > 0)
