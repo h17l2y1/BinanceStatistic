@@ -31,12 +31,13 @@ namespace BinanceStatistic.Telegram.BLL.Services
 
         public async Task<WebhookInfo> GetHookInfo()
         {
-            await _senderService.SendMessageToUsers();
-            
-            // WebhookInfo info = await _telegramClient.GetWebhookInfoAsync();
-            // return info;
-
-            return null;
+            WebhookInfo info = await _telegramClient.GetWebhookInfoAsync();
+            return info;
+        }
+        
+        public async Task SendMessageToUsers()
+        {
+            await _senderService.SendMessageToUsers(5);
         }
 
         public async Task Update(Update update)

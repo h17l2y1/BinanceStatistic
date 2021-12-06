@@ -35,6 +35,13 @@ namespace BinanceStatistic.Telegram.Api.Controllers
             var response = await _service.GetHookInfo();
             return Ok(response);
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> SendMessageToUsers()
+        {
+            await _service.SendMessageToUsers();
+            return Ok();
+        }
 
     }
 }

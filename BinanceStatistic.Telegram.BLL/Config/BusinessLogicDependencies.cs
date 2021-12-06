@@ -15,7 +15,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
             services.AddScoped<ISubscribeHelper, SubscribeHelper>();
             services.AddScoped<ISenderService, SenderService>();
             
-            // services.AddHostedService<GrabberJob>();
+            services.AddHostedService<SenderJob>();
         }
     }
 }

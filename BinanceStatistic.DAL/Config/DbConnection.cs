@@ -12,9 +12,10 @@ namespace BinanceStatistic.DAL.Config
         public static void Add(IServiceCollection services, IConfiguration configuration)
         {
             string connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options => { options.UseSqlServer(connectionString); });
-
-            services.Configure<ConnectionStrings>(x => configuration.GetSection("ConnectionStrings").Bind(x));
+            services.AddDbContext<ApplicationContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
         }
     }
 
@@ -24,7 +25,7 @@ namespace BinanceStatistic.DAL.Config
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(@Directory.GetParent(@Directory.GetCurrentDirectory()) + "/BinanceStatistic.Api/appsettings.json")
+                .AddJsonFile(@Directory.GetCurrentDirectory() + "/appsettings.json")
                 .Build();
             
             string connectionString = configuration.GetConnectionString("DefaultConnection");

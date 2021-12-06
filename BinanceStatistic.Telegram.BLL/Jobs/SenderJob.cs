@@ -10,6 +10,7 @@ namespace BinanceStatistic.Telegram.BLL.Jobs
     public class SenderJob : BackgroundService
     {
         public IServiceProvider Services { get; }
+        private int seconds = 10;
 
         public SenderJob(IServiceProvider services)
         {
@@ -22,15 +23,48 @@ namespace BinanceStatistic.Telegram.BLL.Jobs
             {
                 if (DateTime.Now.Minute % 5 == 0)
                 {
+                    if (seconds != 300)
+                    {
+                        seconds = 300;
+                    }
+                    
                     using (var scope = Services.CreateScope())
                     {
                         var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
-                        await scopedProcessingService.SendMessageToUsers();
+                        await scopedProcessingService.SendMessageToUsers(5);
+                    }
+                }
+                
+                if (DateTime.Now.Minute % 15 == 0)
+                {
+                    using (var scope = Services.CreateScope())
+                    {
+                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
+                        await scopedProcessingService.SendMessageToUsers(15);
+                    }
+                }
+                
+                if (DateTime.Now.Minute % 30 == 0)
+                {
+                    using (var scope = Services.CreateScope())
+                    {
+                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
+                        await scopedProcessingService.SendMessageToUsers(30);
+                    }
+                }
+                
+                if (DateTime.Now.Minute % 60 == 0)
+                {
+                    using (var scope = Services.CreateScope())
+                    {
+                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
+                        await scopedProcessingService.SendMessageToUsers(60);
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
+                await Task.Delay(TimeSpan.FromSeconds(seconds), cancellationToken);
             }
+            
         }
     }
 }

@@ -8,5 +8,7 @@ namespace BinanceStatistic.Telegram.BLL.Services.Interfaces
         Task Update(Update update);
 
         Task<WebhookInfo> GetHookInfo();
+
+        Task SendMessageToUsers();
     }
 }

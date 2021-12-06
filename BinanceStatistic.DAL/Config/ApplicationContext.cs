@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using BinanceStatistic.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 

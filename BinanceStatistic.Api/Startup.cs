@@ -20,7 +20,7 @@ namespace BinanceStatistic.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+	        services.AddControllers();
             services.InjectBusinessLogicDependency(Configuration);
 
 			services.AddSwaggerGen(c =>
@@ -42,7 +42,6 @@ namespace BinanceStatistic.Api
 
             app.UseRouting();
 
-            // app.UseAuthorization();
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

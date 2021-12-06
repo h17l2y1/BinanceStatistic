@@ -9,6 +9,7 @@ using BinanceStatistic.DAL.Entities;
 using BinanceStatistic.DAL.Repositories.Interfaces;
 using BinanceStatistic.Telegram.BLL.Models;
 using BinanceStatistic.Telegram.BLL.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
@@ -18,25 +19,28 @@ namespace BinanceStatistic.Telegram.BLL.Services
     {
         private readonly IUserSubscribeRepository _userSubscribeRepository;
         private readonly ITelegramBotClient _telegramClient;
-        protected readonly HttpClient HttpClient;
-        protected const string BaseAddress = "https://localhost:5001";
+        private readonly HttpClient _httpClient;
         private readonly JsonSerializerOptions _options;
+        private readonly string _endpoint;
         
         public SenderService(IUserSubscribeRepository userSubscribeRepository,
-            ITelegramBotClient telegramClient)
+            ITelegramBotClient telegramClient, IConfiguration configuration)
         {
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri(configuration["StatisticApi"]);
             _userSubscribeRepository = userSubscribeRepository;
             _telegramClient = telegramClient;
-            HttpClient = new HttpClient();
-            HttpClient.BaseAddress = new Uri(BaseAddress);
             _options = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
+            _endpoint = configuration["StatisticApiEndpoint"];
         }
 
-        public async Task SendMessageToUsers()
+        public async Task SendMessageToUsers(int interval)
         {
-            List<User> users = await _userSubscribeRepository.GetUsersWithIntervalSubscriptions(5);
-            string url = "/api/BinanceStatistic/GetInterval";
-            HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(url);
+            List<User> users = await _userSubscribeRepository.GetUsersWithIntervalSubscriptions(interval);
+
+            var xxx = $"{_endpoint}?={interval}";
+            
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(xxx);
             string responseJson = httpResponseMessage.Content.ReadAsStringAsync().Result;
             GetStatisticResponse responseModel = JsonSerializer.Deserialize<GetStatisticResponse>(responseJson, _options);
             
@@ -49,6 +53,11 @@ namespace BinanceStatistic.Telegram.BLL.Services
 
         private string CreateMessage(List<PositionView> statistics)
         {
+            if (statistics == null || statistics.Count == 0)
+            {
+                return "Interval data error";
+            }
+            
             var sb = new StringBuilder();
             foreach (var position in statistics.OrderByDescending(o=>o.Count).Take(20))
             {
@@ -72,7 +81,6 @@ namespace BinanceStatistic.Telegram.BLL.Services
         private string AddPlus(int number)
         {
             return number.ToString("+#;-#;0");
-
         }
     }
 }
