@@ -1,3 +1,4 @@
+using System.Linq;
 using BinanceStatistic.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,5 +15,11 @@ namespace BinanceStatistic.DAL.Config
         public DbSet<User> Users { get; set; }
         public DbSet<Subscribe> Subscribes { get; set; }
         public DbSet<UserSubscribe> UserSubscribes { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Position>().Property(p => p.Amount).HasColumnType("decimal(18,4)");
+
+        }
     }
 }
