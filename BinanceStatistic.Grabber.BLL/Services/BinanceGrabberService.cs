@@ -61,7 +61,7 @@ public class BinanceGrabberService : IBinanceGrabberService
             return binancePositions;
         }
 
-        public async Task<List<BinancePosition>> GrabbAll()
+        private async Task<List<BinancePosition>> GrabbAll()
         {
             List<IBinanceTrader> traders = await GrabbTraders();
             List<BinancePosition> binancePositions = await GrabbPositions(traders);
@@ -71,9 +71,9 @@ public class BinanceGrabberService : IBinanceGrabberService
         public async Task<List<IBinanceTrader>> GrabbTraders()
         {
             List<BinanceRequestTemplate> tradersRequestTemplates = CreateRequestsForTraders();
-            _logger.LogDebug("GrabbTraders start");
+            _logger.LogDebug("Grabb Traders start");
             List<IBinanceTrader> traders = await _client.GrabbTraders(tradersRequestTemplates);
-            _logger.LogDebug("GrabbTraders end - {0}", traders.Count);
+            _logger.LogDebug("Grabb Traders end - {0}", traders.Count);
             return traders;
         }
         
@@ -114,16 +114,17 @@ public class BinanceGrabberService : IBinanceGrabberService
         
         private async Task<List<BinancePosition>> GrabbPositions(List<IBinanceTrader> traders)
         {
-            List<BinanceRequestTemplate> positionTequestTemplates = CreateRequestsForPositions(traders);
-            _logger.LogDebug("GrabbPositions start");
+            List<BinanceRequestTemplate> positionRequestTemplates = CreateRequestsForPositions(traders);
+            _logger.LogDebug("Grabb Positions start");
             
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            List<BinancePosition> positions = await _client.GrabbPositions(positionTequestTemplates);
-            stopWatch.Stop();
-            TimeSpan ts = stopWatch.Elapsed;
+            // Stopwatch stopWatch = new Stopwatch();
+            // stopWatch.Start();
+            List<BinancePosition> positions = await _client.GrabbPositions(positionRequestTemplates);
+            // stopWatch.Stop();
+            // TimeSpan ts = stopWatch.Elapsed;
             
-            _logger.LogDebug("GrabbPositions end - {0} for {1}", positions.Count, ts);
+            // _logger.LogDebug("GrabbPositions end - {0} for {1}", positions.Count, ts);
+            _logger.LogDebug("Grabb Positions end - {0}", positions.Count);
             return positions;
         }
         

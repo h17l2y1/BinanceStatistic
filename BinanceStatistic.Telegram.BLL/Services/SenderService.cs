@@ -37,10 +37,8 @@ namespace BinanceStatistic.Telegram.BLL.Services
         public async Task SendMessageToUsers(int interval)
         {
             List<User> users = await _userSubscribeRepository.GetUsersWithIntervalSubscriptions(interval);
-
-            var xxx = $"{_endpoint}?={interval}";
-            
-            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(xxx);
+            var url = $"{_endpoint}?={interval}";
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(url);
             string responseJson = httpResponseMessage.Content.ReadAsStringAsync().Result;
             GetStatisticResponse responseModel = JsonSerializer.Deserialize<GetStatisticResponse>(responseJson, _options);
             

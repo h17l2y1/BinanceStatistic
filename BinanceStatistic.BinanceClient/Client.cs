@@ -40,11 +40,14 @@ namespace BinanceStatistic.BinanceClient
             foreach (var httpResponseMessage in responses)
             {
                 string responseJson = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                SearchFeaturedTopTraderResponse responseModel = JsonSerializer.Deserialize<SearchFeaturedTopTraderResponse>(responseJson, _options);
-                IEnumerable<IBinanceTrader> traders = responseModel?.Data;
-                if (traders != null)
+                if (!string.IsNullOrEmpty(responseJson))
                 {
-                    binanceTraders.AddRange(traders);
+                    SearchFeaturedTopTraderResponse responseModel = JsonSerializer.Deserialize<SearchFeaturedTopTraderResponse>(responseJson, _options);
+                    IEnumerable<IBinanceTrader> traders = responseModel?.Data;
+                    if (traders != null)
+                    {
+                        binanceTraders.AddRange(traders);
+                    }
                 }
             }
 
