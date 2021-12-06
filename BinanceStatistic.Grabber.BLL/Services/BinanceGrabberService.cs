@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using BinanceStatistic.BinanceClient.Enums;
@@ -50,9 +52,8 @@ public class BinanceGrabberService : IBinanceGrabberService
         
         public async Task<IEnumerable<BinancePosition>> CreateStatistic()
         {
-            var startTime = DateTime.Now;
-            startTime = startTime.AddSeconds(-startTime.Second);
-            startTime = startTime.AddMilliseconds(-startTime.Millisecond);
+            var now = DateTime.Now;
+            var startTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
             
             List<BinancePosition> binancePositions = await GrabbAll();
             List<Position> positions = await CreateStatistic(binancePositions, startTime);
@@ -70,9 +71,9 @@ public class BinanceGrabberService : IBinanceGrabberService
         public async Task<List<IBinanceTrader>> GrabbTraders()
         {
             List<BinanceRequestTemplate> tradersRequestTemplates = CreateRequestsForTraders();
-            _logger.LogDebug("Started GrabbTraders");
+            _logger.LogDebug("GrabbTraders start");
             List<IBinanceTrader> traders = await _client.GrabbTraders(tradersRequestTemplates);
-            _logger.LogDebug("Ended GrabbTraders - {0} grabbed", traders.Count);
+            _logger.LogDebug("GrabbTraders end - {0}", traders.Count);
             return traders;
         }
         
@@ -114,9 +115,15 @@ public class BinanceGrabberService : IBinanceGrabberService
         private async Task<List<BinancePosition>> GrabbPositions(List<IBinanceTrader> traders)
         {
             List<BinanceRequestTemplate> positionTequestTemplates = CreateRequestsForPositions(traders);
-            _logger.LogDebug("Started GrabbPositions");
+            _logger.LogDebug("GrabbPositions start");
+            
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             List<BinancePosition> positions = await _client.GrabbPositions(positionTequestTemplates);
-            _logger.LogDebug("Ended GrabbPositions - {0} grabbed", positions.Count);
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            
+            _logger.LogDebug("GrabbPositions end - {0} for {1}", positions.Count, ts);
             return positions;
         }
         
