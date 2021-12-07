@@ -29,7 +29,7 @@ namespace BinanceStatistic.DAL.Repositories
             
             return await _dbSet.AsNoTracking()
                                .Include(i=>i.Currency)
-                               .Where(w=>w.CreationDate >= correctTime)
+                               .Where(w=>w.CreationDate == lastUpdate || w.CreationDate == correctTime)
                                .OrderByDescending(o=>o.Count)
                                .ToListAsync();
         }

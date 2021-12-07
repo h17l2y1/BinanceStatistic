@@ -93,7 +93,7 @@ public class BinanceGrabberService : IBinanceGrabberService
                     var isCurrencyExist = currencies.FirstOrDefault(prop => prop.Name == s.Key)?.Id;
                     if (isCurrencyExist == null)
                     {
-                        return null;
+                        return new Position();
                     }
 
                     return new Position

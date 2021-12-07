@@ -18,8 +18,7 @@ namespace BinanceStatistic.Grabber.BLL.Config
 
                 q.AddTrigger(t => t
                     .ForJob(jobKey)
-                    .StartNow()
-                    .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(5)).RepeatForever())
+                    .WithCronSchedule("0 0/5 * * * ?")
                 );
                 
                 services.AddQuartzHostedService(options =>

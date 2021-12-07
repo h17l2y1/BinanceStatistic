@@ -19,7 +19,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
 
                 q.AddTrigger(t => t
                     .ForJob(jobKey5min)
-                    .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(5)).RepeatForever())
+                    .WithCronSchedule("0 0/5 * * * ?")
                 );
                 
                 var jobKey15min = new JobKey("15 min job");
@@ -27,7 +27,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
                 
                 q.AddTrigger(t => t
                     .ForJob(jobKey15min)
-                    .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(15)).RepeatForever())
+                    .WithCronSchedule("0 0/15 * * * ?")
                 );
                 
                 var jobKey30min = new JobKey("30 min job");
@@ -35,7 +35,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
                 
                 q.AddTrigger(t => t
                     .ForJob(jobKey30min)
-                    .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(30)).RepeatForever())
+                    .WithCronSchedule("0 0/30 * * * ?")
                 );
                 
                 var jobKey60min = new JobKey("60 min job");
@@ -43,7 +43,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
                 
                 q.AddTrigger(t => t
                     .ForJob(jobKey60min)
-                    .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromHours(1)).RepeatForever())
+                    .WithCronSchedule("0 0 0/1 * * ?")
                 );
                 
                 services.AddQuartzHostedService(options =>
