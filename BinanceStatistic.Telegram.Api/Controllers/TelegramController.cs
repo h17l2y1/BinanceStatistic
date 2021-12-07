@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using BinanceStatistic.Telegram.BLL.Models;
 using BinanceStatistic.Telegram.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
@@ -37,9 +38,9 @@ namespace BinanceStatistic.Telegram.Api.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> SendMessageToUsers()
+        public async Task<IActionResult> SendMessageToUsers([FromBody]GetStatisticRequest request)
         {
-            await _service.SendMessageToUsers();
+            await _service.SendMessageToUsers(request);
             return Ok();
         }
 

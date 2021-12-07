@@ -3,9 +3,9 @@ using BinanceStatistic.DAL.Entities;
 
 namespace BinanceStatistic.Telegram.BLL.Models
 {
-    public class Test
+    public class Subscribe
     {
-        public Test(ICollection<UserSubscribe> userSubscribes, bool isSubscribed)
+        public Subscribe(ICollection<UserSubscribe> userSubscribes, bool isSubscribed)
         {
             UserSubscribes = userSubscribes;
             IsCreated = !isSubscribed;

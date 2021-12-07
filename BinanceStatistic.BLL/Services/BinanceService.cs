@@ -35,6 +35,13 @@ namespace BinanceStatistic.BLL.Services
         
         public async Task<GetStatisticResponse> GetPositionsWithInterval(int interval)
         {
+            List<PositionView> positionViews = await GetPositionsWithInterval2(interval);
+            var response = new GetStatisticResponse(positionViews);
+            return response;
+        }
+
+        public async Task<List<PositionView>> GetPositionsWithInterval2(int interval)
+        {
             DateTime lastUpdate = await _positionRepository.GetLastUpdate();
 
             List<Position> positions = await _positionRepository.GetWithInterval(lastUpdate, interval);
@@ -59,11 +66,10 @@ namespace BinanceStatistic.BLL.Services
                 })
                 .ToList();
 
-            List<PositionView> statisticResponse = _mapper.Map<List<PositionView>>(view);
-            var response = new GetStatisticResponse(statisticResponse);
-            return response;
+            return view;
         }
 
+        
         private int GetDiff(int first, int second)
         {
             int diff = 0;

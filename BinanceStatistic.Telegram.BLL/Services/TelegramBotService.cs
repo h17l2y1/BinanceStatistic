@@ -4,6 +4,7 @@ using BinanceStatistic.DAL.Repositories.Interfaces;
 using BinanceStatistic.Telegram.BLL.Commands;
 using BinanceStatistic.Telegram.BLL.Commands.Interfaces;
 using BinanceStatistic.Telegram.BLL.Helpers.Interfaces;
+using BinanceStatistic.Telegram.BLL.Models;
 using BinanceStatistic.Telegram.BLL.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -35,9 +36,9 @@ namespace BinanceStatistic.Telegram.BLL.Services
             return info;
         }
         
-        public async Task SendMessageToUsers()
+        public async Task SendMessageToUsers(GetStatisticRequest request)
         {
-            await _senderService.SendMessageToUsers(5);
+            await _senderService.SendMessageToUsers(request);
         }
 
         public async Task Update(Update update)

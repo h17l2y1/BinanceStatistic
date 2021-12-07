@@ -5,6 +5,6 @@ namespace BinanceStatistic.Telegram.BLL.Helpers.Interfaces
 {
     public interface ISubscribeHelper
     {
-        Task<Test> CreateOrRemoveSubscribe(long telegramUserId, string subscribeType);
+        Task<Subscribe> CreateOrRemoveSubscribe(long telegramUserId, string subscribeType);
     }
 }

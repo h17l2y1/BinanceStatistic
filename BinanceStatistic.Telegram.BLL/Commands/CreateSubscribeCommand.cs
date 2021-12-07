@@ -43,9 +43,9 @@ namespace BinanceStatistic.Telegram.BLL.Commands
 
         public async Task Execute(Update update, ITelegramBotClient client)
         {
-            Test test = await _subscribeHelper.CreateOrRemoveSubscribe(update.CallbackQuery.From.Id, update.CallbackQuery?.Data);
+            Subscribe subscribe = await _subscribeHelper.CreateOrRemoveSubscribe(update.CallbackQuery.From.Id, update.CallbackQuery?.Data);
             string buttonName = update.CallbackQuery?.Data.Remove((int)update.CallbackQuery?.Data.Length - 2).Trim();
-            string createOrRemoveOutputMessage = test.IsCreated ? 
+            string createOrRemoveOutputMessage = subscribe.IsCreated ? 
                                                                     $"Вы подписались на {buttonName}" :
                                                                     $"Вы отписались от {buttonName}";
 
@@ -57,7 +57,7 @@ namespace BinanceStatistic.Telegram.BLL.Commands
                 true,
                 null,
                 null,
-                GetMenuInline(test.UserSubscribes)
+                GetMenuInline(subscribe.UserSubscribes)
             );
         }
     }

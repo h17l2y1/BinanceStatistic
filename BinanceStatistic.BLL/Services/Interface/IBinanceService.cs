@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BinanceStatistic.BLL.ViewModels;
 
 namespace BinanceStatistic.BLL.Services.Interface
@@ -8,5 +9,8 @@ namespace BinanceStatistic.BLL.Services.Interface
         Task<GetStatisticResponse> GetPositions();
 
         Task<GetStatisticResponse> GetPositionsWithInterval(int interval);
+        
+        Task<List<PositionView>> GetPositionsWithInterval2(int interval);
+
     }
 }

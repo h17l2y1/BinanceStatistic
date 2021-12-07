@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using BinanceStatistic.Telegram.BLL.Models;
 using Telegram.Bot.Types;
 
 namespace BinanceStatistic.Telegram.BLL.Services.Interfaces
@@ -9,6 +10,6 @@ namespace BinanceStatistic.Telegram.BLL.Services.Interfaces
 
         Task<WebhookInfo> GetHookInfo();
 
-        Task SendMessageToUsers();
+        Task SendMessageToUsers(GetStatisticRequest request);
     }
 }

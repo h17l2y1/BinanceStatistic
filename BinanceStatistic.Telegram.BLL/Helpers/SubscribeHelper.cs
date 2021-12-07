@@ -6,6 +6,7 @@ using BinanceStatistic.DAL.Entities;
 using BinanceStatistic.DAL.Repositories.Interfaces;
 using BinanceStatistic.Telegram.BLL.Helpers.Interfaces;
 using BinanceStatistic.Telegram.BLL.Models;
+using Subscribe = BinanceStatistic.Telegram.BLL.Models.Subscribe;
 
 namespace BinanceStatistic.Telegram.BLL.Helpers
 {
@@ -23,10 +24,10 @@ namespace BinanceStatistic.Telegram.BLL.Helpers
             _userSubscribeRepository = userSubscribeRepository;
         }
 
-        public async Task<Test> CreateOrRemoveSubscribe(long telegramUserId, string subscribeType)
+        public async Task<Subscribe> CreateOrRemoveSubscribe(long telegramUserId, string subscribeType)
         {
             int subscribeMinutes = Int32.Parse(Regex.Replace(subscribeType, "[^0-9.]", ""));
-            Subscribe currentSubscribe = await _subscribeRepository.FindByMinutes(subscribeMinutes);
+            DAL.Entities.Subscribe currentSubscribe = await _subscribeRepository.FindByMinutes(subscribeMinutes);
             
             User user = await _userRepository.GetUserWithSubscriptions(telegramUserId);
 
@@ -34,7 +35,7 @@ namespace BinanceStatistic.Telegram.BLL.Helpers
 
             bool isSubscribed = userSubscribe != null;
             
-            var test = new Test(user.UserSubscribes, isSubscribed);
+            var test = new Subscribe(user.UserSubscribes, isSubscribed);
 
             if (!isSubscribed)
             {
