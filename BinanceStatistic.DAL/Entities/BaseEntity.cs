@@ -9,8 +9,7 @@ namespace BinanceStatistic.DAL.Entities
         public BaseEntity()
         {
             Id = Guid.NewGuid().ToString();
-            DateTime dateTime = DateTime.UtcNow;
-            CreationDate = new DateTime(dateTime.Ticks - (dateTime.Ticks % TimeSpan.TicksPerSecond), dateTime.Kind);
+            CreationDate = DateTime.Now;
         }
 
         [Key]

@@ -14,8 +14,7 @@ namespace BinanceStatistic.Telegram.BLL.Config
             services.AddScoped<ITelegramBotService, TelegramBotService>();
             services.AddScoped<ISubscribeHelper, SubscribeHelper>();
             services.AddScoped<ISenderService, SenderService>();
-            
-            services.AddHostedService<SenderJob>();
+            services.AddTransient<SenderJob>();
         }
     }
 }

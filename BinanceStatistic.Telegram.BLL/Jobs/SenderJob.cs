@@ -1,70 +1,40 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using BinanceStatistic.Telegram.BLL.Services.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Quartz;
 
 namespace BinanceStatistic.Telegram.BLL.Jobs
 {
-    public class SenderJob : BackgroundService
+    public class SenderJob : IJob
     {
-        public IServiceProvider Services { get; }
-        private int seconds = 10;
+        private readonly ISenderService _senderService;
 
-        public SenderJob(IServiceProvider services)
+        public SenderJob(ISenderService senderService)
         {
-            Services = services;
+            _senderService = senderService;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+        public async Task Execute(IJobExecutionContext context)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            int interval = 0;
+            if (DateTime.Now.Minute % 5 == 0)
             {
-                if (DateTime.Now.Minute % 5 == 0)
-                {
-                    if (seconds != 300)
-                    {
-                        seconds = 300;
-                    }
-                    
-                    using (var scope = Services.CreateScope())
-                    {
-                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
-                        await scopedProcessingService.SendMessageToUsers(5);
-                    }
-                }
-                
-                if (DateTime.Now.Minute % 15 == 0)
-                {
-                    using (var scope = Services.CreateScope())
-                    {
-                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
-                        await scopedProcessingService.SendMessageToUsers(15);
-                    }
-                }
-                
-                if (DateTime.Now.Minute % 30 == 0)
-                {
-                    using (var scope = Services.CreateScope())
-                    {
-                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
-                        await scopedProcessingService.SendMessageToUsers(30);
-                    }
-                }
-                
-                if (DateTime.Now.Minute % 60 == 0)
-                {
-                    using (var scope = Services.CreateScope())
-                    {
-                        var scopedProcessingService = scope.ServiceProvider.GetRequiredService<ISenderService>();
-                        await scopedProcessingService.SendMessageToUsers(60);
-                    }
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(seconds), cancellationToken);
+                interval = 5;
+            }
+            if (DateTime.Now.Minute % 15 == 0)
+            {
+                interval = 5;
+            }
+            if (DateTime.Now.Minute % 30 == 0)
+            {
+                interval = 5;
+            }
+            if (DateTime.Now.Minute == 0)
+            {
+                interval = 60;
             }
             
+            await _senderService.SendMessageToUsers(interval);
         }
     }
 }
