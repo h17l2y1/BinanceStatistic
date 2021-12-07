@@ -3,16 +3,19 @@ using System.Net;
 using System.Threading.Tasks;
 using BinanceStatistic.BinanceClient.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace BinanceStatistic.Api.Middleware
 {
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -27,6 +30,7 @@ namespace BinanceStatistic.Api.Middleware
             }
             catch (Exception ex)
             {
+                _logger.LogCritical($"Message={ex.Message}/StackTrace={ex.StackTrace}");
                 await HandleExceptionAsync(context, ex);
             }
         }
