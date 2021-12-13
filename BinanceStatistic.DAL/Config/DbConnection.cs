@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using BinanceStatistic.DAL.Config.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +18,22 @@ namespace BinanceStatistic.DAL.Config
             {
                 options.UseSqlServer(connectionString);
             });
+
+            CheckConnection(services);
         }
+        
+        public static void CheckConnection(IServiceCollection services)
+        {
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+            using (var context = serviceProvider.GetRequiredService<ApplicationContext>())
+            {
+                if (!context.Database.CanConnect())
+                {
+                    throw new Exception("Cant connect to db");
+                }
+            }
+        }
+        
     }
 
     public class ApplicationContextFactory : IDesignTimeDbContextFactory<ApplicationContext>
