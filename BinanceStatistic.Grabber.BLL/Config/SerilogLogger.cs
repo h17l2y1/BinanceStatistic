@@ -19,6 +19,7 @@ namespace BinanceStatistic.Grabber.BLL.Config
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Quartz", LogEventLevel.Warning)
                 .WriteTo.MSSqlServer(connectionString, serilogSinkOptions)
                 .WriteTo.Console()
                 .CreateLogger();
