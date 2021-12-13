@@ -7,10 +7,8 @@ namespace BinanceStatistic.BLL.Services.Interface
     public interface IBinanceService
     {
         Task<GetStatisticResponse> GetPositions();
-
-        Task<GetStatisticResponse> GetPositionsWithInterval(int interval);
         
-        Task<List<PositionView>> GetPositionsWithInterval2(int interval);
+        Task<List<PositionView>> GetPositionsWithInterval(int interval);
 
     }
 }

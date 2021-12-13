@@ -37,7 +37,7 @@ namespace BinanceStatistic.BLL.Services
         {
             int interval = 5;
             List<User> users = await _userSubscribeRepository.GetUsersWithIntervalSubscriptions(interval);
-            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval2(interval);
+            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval(interval);
             var usersView = _mapper.Map<List<UserView>>(users);
             var request = new SendStatisticRequest(statisticView, usersView);
 
@@ -48,7 +48,7 @@ namespace BinanceStatistic.BLL.Services
         {
             int interval = 15;
             List<User> users = await _userSubscribeRepository.GetUsersWithIntervalSubscriptions(interval);
-            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval2(interval);
+            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval(interval);
             var usersView = _mapper.Map<List<UserView>>(users);
             var request = new SendStatisticRequest(statisticView, usersView);
 
@@ -59,7 +59,7 @@ namespace BinanceStatistic.BLL.Services
         {
             int interval = 30;
             List<User> users = await _userSubscribeRepository.GetUsersWithIntervalSubscriptions(interval);
-            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval2(interval);
+            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval(interval);
             var usersView = _mapper.Map<List<UserView>>(users);
             var request = new SendStatisticRequest(statisticView, usersView);
 
@@ -70,7 +70,7 @@ namespace BinanceStatistic.BLL.Services
         {
             int interval = 60;
             List<User> users = await _userSubscribeRepository.GetUsersWithIntervalSubscriptions(interval);
-            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval2(interval);
+            List<PositionView> statisticView = await _binanceService.GetPositionsWithInterval(interval);
             var usersView = _mapper.Map<List<UserView>>(users);
             var request = new SendStatisticRequest(statisticView, usersView);
 

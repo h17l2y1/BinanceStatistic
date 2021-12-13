@@ -17,16 +17,9 @@ namespace BinanceStatistic.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStatistic()
+        public async Task<IActionResult> GetPositions()
         {
             GetStatisticResponse response = await _service.GetPositions();
-            return Ok(response);
-        }
-        
-        [HttpGet]
-        public async Task<IActionResult> GetInterval(int interval)
-        {
-            GetStatisticResponse response = await _service.GetPositionsWithInterval(interval);
             return Ok(response);
         }
         
